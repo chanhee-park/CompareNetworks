@@ -8,8 +8,9 @@ const CONSTANT = {
 }
 
 // DONE(0606): 레이아웃 
+// DONE(0607): network.js 데이터 저장 기능
 
-// TODO: network.js
+// TODO: test data 구축 (from dynamic network)
 
 // TODO: sactter.js
 // TODO: pcoord.js (lines, heatmap, and boxplot)
