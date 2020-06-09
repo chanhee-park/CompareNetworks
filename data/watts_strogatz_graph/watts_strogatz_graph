@@ -1,0 +1,9 @@
+# n: The number of nodes
+# k: Each node is connected to k nearest neighbors in ring topology
+# ... The number of edges will same to 'n * (k // 2)'.
+# p: The probability of rewiring each edge
+
+0608 생성 조건
+N = [25, 50, 100]
+K = [4, 6, 8, 10, 12]
+P = [0.1, 0.25, 1]

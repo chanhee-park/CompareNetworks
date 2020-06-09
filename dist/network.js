@@ -41,19 +41,60 @@ var Network = function () {
   }, {
     key: 'getMatrix',
     value: function getMatrix(nodeColumns, links) {
-      var N = nodes.size;
+      var N = Object.keys(nodeColumns).length;
       var matrix = [].concat(_toConsumableArray(Array(N))).map(function (e) {
         return Array(N).fill(0);
       });
 
       links.forEach(function (link) {
-        var fromIdx = nid2idx[link.from];
-        var toIdx = nid2idx[link.to];
+        var fromIdx = nodeColumns[link.from];
+        var toIdx = nodeColumns[link.to];
         matrix[fromIdx][toIdx] += 1;
         matrix[toIdx][fromIdx] += 1;
       });
 
       return matrix;
+    }
+
+    /**
+     * 랜덤 그래프를 생성합니다.
+     * @param {*} numOfNodes 노드의 수
+     * @param {number} edgeProb 두 노드 사이에 엣지가 있을 확률 (0 <= P <= 1)
+     * {
+     *    const randomGraphs = [];
+     *    const N = [25, 50, 75, 100];
+     *    const P = [0.05, 0.10, 0.15, 1];
+     *    for (let n of N) {
+     *      for (let p of P) {
+     *        randomGraphs.push(Network.generateRandomGraph(n, p));
+     *       }
+     *    }
+     *  }
+     */
+
+  }, {
+    key: 'generateRandomGraph',
+    value: function generateRandomGraph(numOfNodes, edgeProb) {
+      // Set Nodes
+      var nodes = new Set();
+      for (var i = 0; i < numOfNodes; i++) {
+        nodes.add(new Node(i));
+      }
+      // Set Links
+      var links = new Set();
+      for (var _i = 0; _i < numOfNodes - 1; _i++) {
+        for (var j = _i + 1; j < numOfNodes; j++) {
+          if (Math.random() <= edgeProb) {
+            links.add(new Link(_i, j));
+          }
+        }
+      }
+      return new Network(nodes, links);
+    }
+  }, {
+    key: 'generateCompleteGraph',
+    value: function generateCompleteGraph(numberOfNodes) {
+      return this.generateRandomGraph(numberOfNodes, 1);
     }
   }]);
 

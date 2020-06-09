@@ -24,18 +24,56 @@ class Network {
    * @param {*} links 
    */
   static getMatrix (nodeColumns, links) {
-    const N = nodes.size;
+    const N = Object.keys(nodeColumns).length;
     const matrix = [...Array(N)].map(e => Array(N).fill(0));
 
     links.forEach(link => {
-      const fromIdx = nid2idx[link.from];
-      const toIdx = nid2idx[link.to];
+      const fromIdx = nodeColumns[link.from];
+      const toIdx = nodeColumns[link.to];
       matrix[fromIdx][toIdx] += 1;
       matrix[toIdx][fromIdx] += 1;
     });
 
     return matrix;
   }
+
+  /**
+   * 랜덤 그래프를 생성합니다.
+   * @param {*} numOfNodes 노드의 수
+   * @param {number} edgeProb 두 노드 사이에 엣지가 있을 확률 (0 <= P <= 1)
+   * {
+   *    const randomGraphs = [];
+   *    const N = [25, 50, 75, 100];
+   *    const P = [0.05, 0.10, 0.15, 1];
+   *    for (let n of N) {
+   *      for (let p of P) {
+   *        randomGraphs.push(Network.generateRandomGraph(n, p));
+   *       }
+   *    }
+   *  }
+   */
+  static generateRandomGraph (numOfNodes, edgeProb) {
+    // Set Nodes
+    const nodes = new Set();
+    for (let i = 0; i < numOfNodes; i++) {
+      nodes.add(new Node(i));
+    }
+    // Set Links
+    const links = new Set();
+    for (let i = 0; i < numOfNodes - 1; i++) {
+      for (let j = i + 1; j < numOfNodes; j++) {
+        if (Math.random() <= edgeProb) {
+          links.add(new Link(i, j));
+        }
+      }
+    }
+    return new Network(nodes, links);
+  }
+
+  static generateCompleteGraph (numberOfNodes) {
+    return this.generateRandomGraph(numberOfNodes, 1);
+  }
+
 }
 
 /**
