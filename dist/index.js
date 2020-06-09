@@ -1,11 +1,18 @@
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 
-var CONSTANT = {};
+var networks = [];
+for (var i = 1; i <= 45; i++) {
+  var filename = './dataset/watts_strogatz_graph/network(' + i + ').csv';
+  var csv = Util.loadFile(filename);
+  networks.push(Network.getNetwrokFromCSV(csv));
+}
 
-// DONE(0606): 레이아웃 
+console.log(networks);
+
+// DONE(0606): 레이아웃
+
 // DONE(0607): network.js 데이터 저장 기능
-
-// TODO: test data 구축 (from dynamic network)
+// DONE(0608): test data 구축 (watts strogatz graph)
 
 // TODO: sactter.js
 // TODO: pcoord.js (lines, heatmap, and boxplot)

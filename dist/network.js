@@ -25,11 +25,11 @@ var Network = function () {
     key: 'getNodeColumns',
     value: function getNodeColumns(nodes) {
       // 노드 id 별로 몇번째 행과 열을 사용할지 지정
-      var nodeColumn = {};
+      var nodeColumns = {};
       [].concat(_toConsumableArray(nodes)).forEach(function (node, i) {
-        return nodeColumn[node.id] = i;
+        return nodeColumns[node] = i;
       });
-      return nodeColumn;
+      return nodeColumns;
     }
 
     /**
@@ -45,7 +45,6 @@ var Network = function () {
       var matrix = [].concat(_toConsumableArray(Array(N))).map(function (e) {
         return Array(N).fill(0);
       });
-
       links.forEach(function (link) {
         var fromIdx = nodeColumns[link.from];
         var toIdx = nodeColumns[link.to];
@@ -57,65 +56,53 @@ var Network = function () {
     }
 
     /**
-     * 랜덤 그래프를 생성합니다.
-     * @param {*} numOfNodes 노드의 수
-     * @param {number} edgeProb 두 노드 사이에 엣지가 있을 확률 (0 <= P <= 1)
-     * {
-     *    const randomGraphs = [];
-     *    const N = [25, 50, 75, 100];
-     *    const P = [0.05, 0.10, 0.15, 1];
-     *    for (let n of N) {
-     *      for (let p of P) {
-     *        randomGraphs.push(Network.generateRandomGraph(n, p));
-     *       }
-     *    }
-     *  }
+     * csv string 으로부터 네트워크를 생성합니다.  
+     * @param {string} csv 네트워크를 생성할 데이터셋
      */
 
   }, {
-    key: 'generateRandomGraph',
-    value: function generateRandomGraph(numOfNodes, edgeProb) {
-      // Set Nodes
+    key: 'getNetwrokFromCSV',
+    value: function getNetwrokFromCSV(csv) {
+      var lines = csv.split('\n');
       var nodes = new Set();
-      for (var i = 0; i < numOfNodes; i++) {
-        nodes.add(new Node(i));
-      }
-      // Set Links
       var links = new Set();
-      for (var _i = 0; _i < numOfNodes - 1; _i++) {
-        for (var j = _i + 1; j < numOfNodes; j++) {
-          if (Math.random() <= edgeProb) {
-            links.add(new Link(_i, j));
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = lines[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var line = _step.value;
+
+          var elems = line.split(',');
+          var from = parseInt(elems[0]);
+          var to = parseInt(elems[1]);
+          if (isNaN(from + to)) continue;
+
+          nodes.add(from).add(to);
+          links.add(new Link(from, to));
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
           }
         }
       }
+
       return new Network(nodes, links);
-    }
-  }, {
-    key: 'generateCompleteGraph',
-    value: function generateCompleteGraph(numberOfNodes) {
-      return this.generateRandomGraph(numberOfNodes, 1);
     }
   }]);
 
   return Network;
 }();
-
-/**
- * @class Node
- * @param {number} id
- * @param {any} data
- */
-
-
-var Node = function Node(id) {
-  var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-
-  _classCallCheck(this, Node);
-
-  this.id = id;
-  this.data = data;
-};
 
 /**
  * @class Link
@@ -130,23 +117,3 @@ var Link = function Link(fromId, toId) {
   this.from = fromId;
   this.to = toId;
 };
-
-function getTestNetwork() {
-  var nodes = new Set();
-  var links = new Set();
-  nodes.add(new Node(0));
-  nodes.add(new Node(3));
-  nodes.add(new Node(5));
-  nodes.add(new Node(10));
-  nodes.add(new Node(13));
-  links.add(new Link(0, 3));
-  links.add(new Link(0, 5));
-  links.add(new Link(3, 10));
-  links.add(new Link(5, 10));
-  links.add(new Link(5, 13));
-  links.add(new Link(10, 13));
-  return new Network(nodes, links);
-}
-
-var testNetwork = getTestNetwork();
-console.log(testNetwork);
