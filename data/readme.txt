@@ -1,3 +1,5 @@
+watts_strogatz_graph
+
 # n: The number of nodes
 # k: Each node is connected to k nearest neighbors in ring topology
 # ... The number of edges will same to 'n * (k // 2)'.
