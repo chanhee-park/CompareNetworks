@@ -4,6 +4,7 @@ class Network {
     this.links = typeof links !== 'undefined' ? links : new Set();
     this.nodeColumns = Network.getNodeColumns(nodes);
     this.matrix = Network.getMatrix(this.nodeColumns, this.links);
+    this.stats = new Stat(this);
   }
 
   /**
