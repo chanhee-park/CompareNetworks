@@ -12,7 +12,9 @@ var Network = function () {
     this.links = typeof links !== 'undefined' ? links : new Set();
     this.nodeColumns = Network.getNodeColumns(nodes);
     this.matrix = Network.getMatrix(this.nodeColumns, this.links);
-    this.stats = new Stat(this);
+    this.distMatrix = Network.getDistanceMatrix(this.matrix);
+    // TODO: Laplacians Matrix and Normalized Laplacians Matrix
+    this.stat = new StatProcessor.getStat(this);
   }
 
   /**
@@ -54,6 +56,37 @@ var Network = function () {
       });
 
       return matrix;
+    }
+
+    /**
+    * Get Shortest Path lengths of All Node Pairs in a network
+    * This is an implementation of Floyd–Warshall algorithm
+    * @param {Network} network 
+    * @returns {number[][]} Distance Matrix (2D array)
+    */
+
+  }, {
+    key: 'getDistanceMatrix',
+    value: function getDistanceMatrix(matrix) {
+      var N = matrix.length;
+      var dist = Util.copy(matrix);
+      for (var i = 0; i < N; i++) {
+        for (var j = 0; j < N; j++) {
+          if (i != j && dist[i][j] == 0) {
+            dist[i][j] = Infinity;
+          }
+        }
+      }
+      for (var k = 0; k < N; k++) {
+        for (var _i = 0; _i < N; _i++) {
+          for (var _j = 0; _j < N; _j++) {
+            if (dist[_i][_j] > dist[_i][k] + dist[k][_j]) {
+              dist[_i][_j] = dist[_i][k] + dist[k][_j];
+            }
+          }
+        }
+      }
+      return dist;
     }
 
     /**

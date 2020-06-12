@@ -5,43 +5,66 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /**
- * 네트워크 통계치를 계산하고 저장한다.
+ * 네트워크 통계치를 계산하고 저장한다. (Static Class)
  * 통계치 목록 참고
  * (wiki) https://en.wikipedia.org/wiki/Network_science
  * (web) http://networkrepository.com/
  * (paper) ManyNets (2010 CHI - Visualization)
  */
-var Stat = function () {
-  function Stat(network) {
-    _classCallCheck(this, Stat);
-
-    // Nodes, Edges, Density
-    this.N = network.nodes.size;
-    this.E = network.links.size;
-    this.D = this.E / (this.N * (this.N - 1) / 2);
-
-    // Degree - Histogram, min, max, avg
-    this.degrees = Stat.getDegreeHistogram(network);
-    var degreeArr = Object.values(this.degrees);
-    var degreeMinMax = Util.minmax(degreeArr);
-    this.degree_min = degreeMinMax.min;
-    this.degree_max = degreeMinMax.max;
-    this.degree_avg = Util.average(degreeArr);
-
-    // Triangles (3-clique)
-    var triangles = Stat.getTriangles(network);
-    this.T = triangles.length;
-    this.T_max = Stat.getMaximumTriangle(triangles);
-    this.T_avg = this.T * 3 / this.E;
+var StatProcessor = function () {
+  function StatProcessor() {
+    _classCallCheck(this, StatProcessor);
   }
 
-  /**
-   * Count of Degrees of all nodes in the network
-   * @param {Network} network 
-   */
+  _createClass(StatProcessor, null, [{
+    key: 'getStat',
+    value: function getStat(network) {
+      stat = {};
+      stat.N = network.nodes.size;
+      stat.E = network.links.size;
+      stat.D = stat.E / (stat.N * (stat.N - 1) / 2);
 
+      // Degree - Histogram, min, max, avg
+      stat.degrees = StatProcessor.getDegreeHistogram(network);
+      var degreeArr = Object.values(stat.degrees);
+      var degreeMinMax = Util.minmax(degreeArr);
+      stat.degree_min = degreeMinMax.min;
+      stat.degree_max = degreeMinMax.max;
+      stat.degree_avg = Util.average(degreeArr);
 
-  _createClass(Stat, null, [{
+      // Triangles (3-clique)
+      var triangles = StatProcessor.getTriangles(network);
+      stat.T = triangles.length;
+      stat.T_max = StatProcessor.getMaximumTriangle(triangles);
+      stat.T_avg = stat.T * 3 / stat.E;
+
+      // Distances
+      var distAvgMax = StatProcessor.getAvgMaxDistance(network.distMatrix);
+      stat.dist_max = distAvgMax.max;
+      stat.dist_avg = distAvgMax.avg;
+
+      return stat;
+      /**
+        * TODO: 개발이 필요한 네트워크 통계치
+        * Clustering coefficient (local avg, global),
+        * Assort coefficient,
+        * Component count,
+        * Component size,
+        * Duration histogram,
+        * Histograms of k-clique
+        * Lower bound on the size of the maximum clique
+        * Histograms of k-cores
+        * Maximum k-core number,
+        * and so on...
+        */
+    }
+
+    /**
+     * Count of Degrees of all nodes in the network
+     * @param {Network} network 
+     */
+
+  }, {
     key: 'getDegreeHistogram',
     value: function getDegreeHistogram(network) {
       var histogram = {};
@@ -117,24 +140,31 @@ var Stat = function () {
     }
 
     /**
-     * TODO: 개발이 필요한 네트워크 통계치 
-     * Component count, 
-     * Component size, 
-     * Duration histogram,
-     * Assort coefficient, 
-     * Average shortest path length (or characteristic path length)
-     * Clustering coefficient (local avg, global),  
-     * Triangles (count, max, avg),
-     * Lower bound on the size of the maximum clique
-     * Histograms of k-clique
-     * Histograms of k-cores
-     * Maximum k-core number,
-     * and so on...
+     * get average and maximum distance of all connected node pairs
+     * @param {number[][]} dist distance matrix (2d array)
      */
 
+  }, {
+    key: 'getAvgMaxDistance',
+    value: function getAvgMaxDistance(dist) {
+      var N = dist.length;
+      var max_dist = 0,
+          total_dist = 0,
+          total_pair = 0;
+      for (var i = 0; i < N - 1; i++) {
+        for (var j = i + 1; j < N; j++) {
+          if (isFinite(dist[i][j])) {
+            max_dist = Math.max(max_dist, dist[i][j]);
+            total_dist += dist[i][j];
+            total_pair += 1;
+          }
+        }
+      }
+      return { max: max_dist, avg: total_dist / total_pair };
+    }
   }]);
 
-  return Stat;
+  return StatProcessor;
 }();
 
 var STAT_DESC = {
@@ -187,5 +217,15 @@ var STAT_DESC = {
     name: 'Average triangles formed by a edge',
     type: 'Number',
     time: 'O(N^3)'
+  },
+  dist_max: {
+    name: 'Maximum distance of all connected node pairs',
+    type: 'Number',
+    time: 'O(N^2)'
+  },
+  dist_avg: {
+    name: 'Maximum distance of all connected node pairs',
+    type: 'Number',
+    time: 'O(N^2)'
   }
 };

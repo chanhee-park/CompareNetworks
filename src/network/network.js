@@ -4,7 +4,9 @@ class Network {
     this.links = typeof links !== 'undefined' ? links : new Set();
     this.nodeColumns = Network.getNodeColumns(nodes);
     this.matrix = Network.getMatrix(this.nodeColumns, this.links);
-    this.stats = new Stat(this);
+    this.distMatrix = Network.getDistanceMatrix(this.matrix)
+    // TODO: Laplacians Matrix and Normalized Laplacians Matrix
+    this.stat = new StatProcessor.getStat(this);
   }
 
   /**
@@ -35,6 +37,34 @@ class Network {
     });
 
     return matrix;
+  }
+
+  /**
+ * Get Shortest Path lengths of All Node Pairs in a network
+ * This is an implementation of Floyd–Warshall algorithm
+ * @param {Network} network 
+ * @returns {number[][]} Distance Matrix (2D array)
+ */
+  static getDistanceMatrix (matrix) {
+    const N = matrix.length;
+    const dist = Util.copy(matrix);
+    for (let i = 0; i < N; i++) {
+      for (let j = 0; j < N; j++) {
+        if (i != j && dist[i][j] == 0) {
+          dist[i][j] = Infinity;
+        }
+      }
+    }
+    for (let k = 0; k < N; k++) {
+      for (let i = 0; i < N; i++) {
+        for (let j = 0; j < N; j++) {
+          if (dist[i][j] > dist[i][k] + dist[k][j]) {
+            dist[i][j] = dist[i][k] + dist[k][j]
+          }
+        }
+      }
+    }
+    return dist;
   }
 
   /**
