@@ -22,6 +22,36 @@ class Util {
   // clone value of obj(include array) not reference
   static copy = obj => JSON.parse(JSON.stringify(obj));
 
+  // get width and height of the dom element by element ID
+  static getSizeOfDOM (id) {
+    const elem = document.getElementById(id);
+    const bBox = elem.getBoundingClientRect();
+    return {
+      width: bBox.width,
+      height: bBox.height,
+    }
+  }
+
+  /**
+ * svg를 생성하고 리턴한다. 
+ * @param {string} id id 스트링 (eg. 'my_container')
+ */
+  static generateSVG (id) {
+    const container = d3.select(`#${id}`);
+    const bBox = container.node().getBoundingClientRect();
+    const svgW = bBox.width - 2 * PADDING_FOR_SECTION;
+    const svgH = bBox.height - 2 * PADDING_FOR_SECTION;
+
+    return container.append("svg")
+      .attr("width", svgW)
+      .attr("height", svgH);
+  }
+
+  // 리액트 컴포넌트를 입력받아 부모 DOM 오브젝트의 ID를 리턴한다.
+  static getParentIdOfReactComp (ReactComp) {
+    return ReactDOM.findDOMNode(ReactComp).parentNode.getAttribute('id')
+  }
+
   // -------- 통계 연산 --------
   /**
    * 최대 값과 최소 값을 찾는다.
@@ -74,7 +104,7 @@ class Util {
   }
 
   /**
-   *  Normalize 2D Array. 2차원 배열을 표준화한다.
+   *  Standardize2d 2D Array. 2차원 배열을 표준화한다.
    * @param {Array.<Array.<number>>} arr2d 정규화할 2차원 배열
    * @return {number[]} 표준화된 2차원 배열
    */

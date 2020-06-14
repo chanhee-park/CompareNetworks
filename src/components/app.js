@@ -7,8 +7,8 @@ class App extends React.Component {
     return (
       <div className="app">
         <div className="row row--first">
-          <div className="section section__scatter">
-            {/* TODO: < ScatterPlot networks={this.props.networks} /> */}
+          <div className="section section__scatter" id="svg_parent__scatter">
+            < ScatterPlot networks={this.props.networks} />
           </div>
 
           <div className="section section__pcoord">

@@ -24,7 +24,11 @@ var App = function (_React$Component) {
         React.createElement(
           "div",
           { className: "row row--first" },
-          React.createElement("div", { className: "section section__scatter" }),
+          React.createElement(
+            "div",
+            { className: "section section__scatter", id: "svg_parent__scatter" },
+            React.createElement(ScatterPlot, { networks: this.props.networks })
+          ),
           React.createElement("div", { className: "section section__pcoord" })
         ),
         React.createElement(

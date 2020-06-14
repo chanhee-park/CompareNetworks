@@ -1,5 +1,3 @@
-ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
-
 var networks = [];
 for (var i = 1; i <= 100; i++) {
   var filename = './dataset/watts_strogatz_graph/network(' + i + ').csv';
@@ -7,12 +5,7 @@ for (var i = 1; i <= 100; i++) {
   networks.push(Network.getNetwrokFromCSV(csv));
 }
 
-console.log(networks);
-
-var stats = ['D', 'degree_min', 'degree_max', 'degree_avg', 'T', 'T_max', 'T_avg', 'dist_max', 'dist_avg'];
-var diff = NetComparator.getDiffOfStats(networks, stats);
-var mdsVal = Util.mds(diff);
-console.log(mdsVal);
+ReactDOM.render(React.createElement(App, { networks: networks }), document.getElementById('root'));
 
 // DONE(0606): 레이아웃
 

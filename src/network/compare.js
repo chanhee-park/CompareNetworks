@@ -10,7 +10,7 @@ class NetComparator {
    * @param {*} networks 
    * @param {*} statKey 
    */
-  static getDiffOfStat (networks, statKey) {
+  static getDiffByStat (networks, statKey) {
     const N = networks.length;
     const diff = [...Array(N)].map(e => Array(N).fill(0));
     for (let i = 0; i < N - 1; i++) {
@@ -32,9 +32,9 @@ class NetComparator {
  * @param {*} networks 
  * @param {*} statKeys
  */
-  static getDiffOfStats (networks, statKeys) {
+  static getDiffByStats (networks, statKeys) {
     const diffs = statKeys.map(s =>
-      NetComparator.getDiffOfStat(networks, s)
+      NetComparator.getDiffByStat(networks, s)
     );
     const diffSum = Util.sumMultipleMatrices(diffs);
     return Util.normalize2d(diffSum, 0, 1);

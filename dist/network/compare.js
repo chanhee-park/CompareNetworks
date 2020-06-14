@@ -15,7 +15,7 @@ var NetComparator = function () {
   }
 
   _createClass(NetComparator, null, [{
-    key: "getDiffOfStat",
+    key: "getDiffByStat",
 
     /**
      * The (absolute) difference of statistics such as 
@@ -23,7 +23,7 @@ var NetComparator = function () {
      * @param {*} networks 
      * @param {*} statKey 
      */
-    value: function getDiffOfStat(networks, statKey) {
+    value: function getDiffByStat(networks, statKey) {
       var N = networks.length;
       var diff = [].concat(_toConsumableArray(Array(N))).map(function (e) {
         return Array(N).fill(0);
@@ -49,10 +49,10 @@ var NetComparator = function () {
     */
 
   }, {
-    key: "getDiffOfStats",
-    value: function getDiffOfStats(networks, statKeys) {
+    key: "getDiffByStats",
+    value: function getDiffByStats(networks, statKeys) {
       var diffs = statKeys.map(function (s) {
-        return NetComparator.getDiffOfStat(networks, s);
+        return NetComparator.getDiffByStat(networks, s);
       });
       var diffSum = Util.sumMultipleMatrices(diffs);
       return Util.normalize2d(diffSum, 0, 1);
