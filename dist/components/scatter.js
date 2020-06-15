@@ -89,7 +89,7 @@ var ScatterPlot = function (_React$Component) {
     key: 'draw',
     value: function draw(points, svg, padding) {
       svg.selectAll("*").remove();
-      ScatterPlot.drawAxisLines(svg);
+      ScatterPlot.drawAxisLines(svg, 5);
       ScatterPlot.drawPoints(points, svg, padding);
       // TODO: 안내선
       // TODO: 확대 축소 클릭 호버 인터랙션
@@ -103,21 +103,20 @@ var ScatterPlot = function (_React$Component) {
           cx: p[0] + padding,
           cy: p[1] + padding,
           r: 6,
-          fill: '#369',
-          opacity: 0.5
+          fill: CONSTANTS.COLOR_INSTANCE,
+          opacity: CONSTANTS.OPACITY_NON_SCATTER
         });
       });
     }
   }, {
     key: 'drawAxisLines',
-    value: function drawAxisLines(svg) {
+    value: function drawAxisLines(svg, numberOfAxis) {
       // get svg box 
       var svgBBox = svg.node().getBoundingClientRect();
       var svgW = svgBBox.width;
       var svgH = svgBBox.height;
 
       // Draw Axis and Legend
-      var numberOfAxis = 5;
       var axisW = svgW / (numberOfAxis + 1);
       var axisH = svgH / (numberOfAxis + 1);
       for (var i = 1; i <= numberOfAxis; i++) {
@@ -127,7 +126,7 @@ var ScatterPlot = function (_React$Component) {
           x2: svgW,
           y1: i * axisH,
           y2: i * axisH,
-          stroke: '#ddd'
+          stroke: CONSTANTS.COLOR_AXIS
         });
         // 세로 선 
         svg.append('line').attrs({
@@ -135,7 +134,7 @@ var ScatterPlot = function (_React$Component) {
           x2: i * axisW,
           y1: 0,
           y2: svgH,
-          stroke: '#ddd'
+          stroke: CONSTANTS.COLOR_AXIS
         });
       }
     }

@@ -5,12 +5,10 @@ for (let i = 1; i <= 100; i++) {
   networks.push(Network.getNetwrokFromCSV(csv));
 }
 
-
 ReactDOM.render(
   <App networks={networks} />,
   document.getElementById('root')
 );
-
 
 // DONE(0606): 레이아웃
 
@@ -19,12 +17,13 @@ ReactDOM.render(
 // DONE(0609): network 통계치 추출
 // DONE(0611): network 비교 - 통계치 
 
-// TODO: sactter.js (축 선택)
-// TODO: pcoord.js (lines, heatmap, and boxplot)
+// DONE(0613): sactter.js 기본
+// DONE(0614): pcoord.js 기본
 // TODO: diagram.js -> node-link-diagram
 // TODO: diagram.js -> matrix-diagram
 // TODO: diagram.js -> circos-diagram
 
+// TODO: pcoord.js (lines, heatmap, and boxplot)
 // TODO: scatter 인터렉션 (호버, 선택)
 // TODO: pcoord 인터렉션 (호버, 선택)
 // TODO: scatter - pcoord 상호 인터렉션 (호버, 선택)

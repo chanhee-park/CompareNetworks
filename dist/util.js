@@ -16,11 +16,10 @@ var Util = function () {
     key: "loadFile",
 
     /**
-       * 파일을 불러온다.
-       * @method loadFile
-       * @param {string} filePath 불러올 파일의 파일명을 포함한 경로
-       * @returns {string} 불러온 파일의 responseText
-       */
+     * 파일을 불러온다.
+     * @method loadFile
+     * @param {string} filePath 불러올 파일의 파일명을 포함한 경로     * @returns {string} 불러온 파일의 responseText
+     */
     value: function loadFile(filePath) {
       var result = null;
       var xmlhttp = new XMLHttpRequest();
@@ -32,13 +31,33 @@ var Util = function () {
       return result;
     }
 
+    // -------- 객체 처리 --------
     // clone value of obj(include array) not reference
 
   }, {
-    key: "getSizeOfDOM",
+    key: "getArraiesByKey",
 
 
+    // Get arraies by each key
+    value: function getArraiesByKey(collection) {
+      var keys = Object.keys(collection[0]);
+      var ret = {};
+      keys.forEach(function (k) {
+        return ret[k] = [];
+      });
+      collection.forEach(function (obj) {
+        for (var key in obj) {
+          ret[key].push(obj[key]);
+        }
+      });
+      return ret;
+    }
+
+    // -------- DOM 관리 --------
     // get width and height of the dom element by element ID
+
+  }, {
+    key: "getSizeOfDOM",
     value: function getSizeOfDOM(id) {
       var elem = document.getElementById(id);
       var bBox = elem.getBoundingClientRect();
@@ -49,9 +68,9 @@ var Util = function () {
     }
 
     /**
-    * svg를 생성하고 리턴한다. 
-    * @param {string} id id 스트링 (eg. 'my_container')
-    */
+     * svg를 생성하고 리턴한다. 
+     * @param {string} id id 스트링 (eg. 'my_container')
+     */
 
   }, {
     key: "generateSVG",

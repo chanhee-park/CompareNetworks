@@ -1,6 +1,9 @@
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      selected: [],
+    }
   }
 
   render () {
@@ -8,11 +11,11 @@ class App extends React.Component {
       <div className="app">
         <div className="row row--first">
           <div className="section section__scatter" id="svg_parent__scatter">
-            < ScatterPlot networks={this.props.networks} />
+            < ScatterPlot networks={this.props.networks} selected={this.state.selected} />
           </div>
 
-          <div className="section section__pcoord">
-            {/* TODO: < PCoord networks={this.props.networks} /> */}
+          <div className="section section__pcoord" id="svg_parent__pcoord">
+            < PCoord networks={this.props.networks} selected={this.state.selected} />
           </div>
         </div>
 

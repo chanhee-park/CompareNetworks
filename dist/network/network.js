@@ -13,7 +13,7 @@ var Network = function () {
     this.nodeColumns = Network.getNodeColumns(nodes);
     this.matrix = Network.getMatrix(this.nodeColumns, this.links);
     this.distMatrix = Network.getDistanceMatrix(this.matrix);
-    // TODO: Laplacians Matrix and Normalized Laplacians Matrix
+    // TODO: Laplacians Matrix & Normalized Laplacians Matrix
     this.stat = new StatProcessor.getStat(this);
   }
 

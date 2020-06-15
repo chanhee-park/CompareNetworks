@@ -12,7 +12,12 @@ var App = function (_React$Component) {
   function App(props) {
     _classCallCheck(this, App);
 
-    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+    _this.state = {
+      selected: []
+    };
+    return _this;
   }
 
   _createClass(App, [{
@@ -27,9 +32,13 @@ var App = function (_React$Component) {
           React.createElement(
             "div",
             { className: "section section__scatter", id: "svg_parent__scatter" },
-            React.createElement(ScatterPlot, { networks: this.props.networks })
+            React.createElement(ScatterPlot, { networks: this.props.networks, selected: this.state.selected })
           ),
-          React.createElement("div", { className: "section section__pcoord" })
+          React.createElement(
+            "div",
+            { className: "section section__pcoord", id: "svg_parent__pcoord" },
+            React.createElement(PCoord, { networks: this.props.networks, selected: this.state.selected })
+          )
         ),
         React.createElement(
           "div",

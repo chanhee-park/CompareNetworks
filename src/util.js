@@ -3,11 +3,10 @@
  */
 class Util {
   /**
-     * 파일을 불러온다.
-     * @method loadFile
-     * @param {string} filePath 불러올 파일의 파일명을 포함한 경로
-     * @returns {string} 불러온 파일의 responseText
-     */
+   * 파일을 불러온다.
+   * @method loadFile
+   * @param {string} filePath 불러올 파일의 파일명을 포함한 경로     * @returns {string} 불러온 파일의 responseText
+   */
   static loadFile (filePath) {
     let result = null;
     let xmlhttp = new XMLHttpRequest();
@@ -19,9 +18,24 @@ class Util {
     return result;
   }
 
+  // -------- 객체 처리 --------
   // clone value of obj(include array) not reference
   static copy = obj => JSON.parse(JSON.stringify(obj));
 
+  // Get arraies by each key
+  static getArraiesByKey (collection, keys) {
+    const keys = Object.keys(collection[0]);
+    const ret = {};
+    keys.forEach(k => ret[k] = []);
+    collection.forEach(obj => {
+      for (let key in keys) {
+        ret[key].push(obj[key]);
+      }
+    });
+    return ret;
+  }
+
+  // -------- DOM 관리 --------
   // get width and height of the dom element by element ID
   static getSizeOfDOM (id) {
     const elem = document.getElementById(id);
@@ -33,9 +47,9 @@ class Util {
   }
 
   /**
- * svg를 생성하고 리턴한다. 
- * @param {string} id id 스트링 (eg. 'my_container')
- */
+   * svg를 생성하고 리턴한다. 
+   * @param {string} id id 스트링 (eg. 'my_container')
+   */
   static generateSVG (id) {
     const container = d3.select(`#${id}`);
     const bBox = container.node().getBoundingClientRect();

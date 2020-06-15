@@ -60,7 +60,7 @@ class ScatterPlot extends React.Component {
   // 스캐터플롯을 그린다.
   static draw (points, svg, padding) {
     svg.selectAll("*").remove();
-    ScatterPlot.drawAxisLines(svg);
+    ScatterPlot.drawAxisLines(svg, 5);
     ScatterPlot.drawPoints(points, svg, padding);
     // TODO: 안내선
     // TODO: 확대 축소 클릭 호버 인터랙션
@@ -73,20 +73,19 @@ class ScatterPlot extends React.Component {
         cx: p[0] + padding,
         cy: p[1] + padding,
         r: 6,
-        fill: '#369',
-        opacity: 0.5,
+        fill: CONSTANTS.COLOR_INSTANCE,
+        opacity: CONSTANTS.OPACITY_NON_SCATTER,
       });
     });
   }
 
-  static drawAxisLines (svg) {
+  static drawAxisLines (svg, numberOfAxis) {
     // get svg box 
     const svgBBox = svg.node().getBoundingClientRect();
     const svgW = svgBBox.width;
     const svgH = svgBBox.height;
 
     // Draw Axis and Legend
-    const numberOfAxis = 5;
     const axisW = svgW / (numberOfAxis + 1);
     const axisH = svgH / (numberOfAxis + 1);
     for (let i = 1; i <= numberOfAxis; i++) {
@@ -96,7 +95,7 @@ class ScatterPlot extends React.Component {
         x2: svgW,
         y1: i * axisH,
         y2: i * axisH,
-        stroke: '#ddd'
+        stroke: CONSTANTS.COLOR_AXIS
       });
       // 세로 선 
       svg.append('line').attrs({
@@ -104,7 +103,7 @@ class ScatterPlot extends React.Component {
         x2: i * axisW,
         y1: 0,
         y2: svgH,
-        stroke: '#ddd'
+        stroke: CONSTANTS.COLOR_AXIS
       });
     }
   }
