@@ -68,13 +68,18 @@ class ScatterPlot extends React.Component {
   }
 
   static drawPoints (points, svg, padding) {
-    points.forEach(p => {
+    points.forEach((p, i) => {
       svg.append('circle').attrs({
         cx: p[0] + padding,
         cy: p[1] + padding,
-        r: 6,
+        r: CONSTANTS.RADIUS_SCATTER,
         fill: CONSTANTS.COLOR_INSTANCE,
-        opacity: CONSTANTS.OPACITY_NON_SCATTER,
+        opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
+        id: `network_circle-${i}`
+      }).on("mouseover", () => {
+        ScatterPlot.handleMouseOver(p, networks[i], i);
+      }).on("mouseout", () => {
+        ScatterPlot.handleMouseOut(p, i)
       });
     });
   }
@@ -106,6 +111,36 @@ class ScatterPlot extends React.Component {
         stroke: CONSTANTS.COLOR_AXIS
       });
     }
+  }
+
+  static handleMouseOver (point, network, idx) {
+    d3.select(`#network_circle-${idx}`).attrs({
+      fill: CONSTANTS.COLOR_HOVERED,
+      r: CONSTANTS.RADIUS_SCATTER * 3,
+      opacity: CONSTANTS.OPACITY_SELECTED
+    });
+
+    return;
+    // Specify where to put label of text
+    svg.append("text").attr({
+      id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
+      x: function () { return xScale(d.x) - 30; },
+      y: function () { return yScale(d.y) - 15; }
+    }).text(function () {
+      return [d.x, d.y];  // Value of the text
+    });
+  }
+
+  static handleMouseOut (point, idx) {
+    d3.select(`#network_circle-${idx}`).attrs({
+      fill: CONSTANTS.COLOR_INSTANCE,
+      r: CONSTANTS.RADIUS_SCATTER,
+      opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER
+    });
+
+    return;
+    // Select text by id and then remove
+    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
   }
 
   render () {

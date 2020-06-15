@@ -98,13 +98,18 @@ var ScatterPlot = function (_React$Component) {
   }, {
     key: 'drawPoints',
     value: function drawPoints(points, svg, padding) {
-      points.forEach(function (p) {
+      points.forEach(function (p, i) {
         svg.append('circle').attrs({
           cx: p[0] + padding,
           cy: p[1] + padding,
-          r: 6,
+          r: CONSTANTS.RADIUS_SCATTER,
           fill: CONSTANTS.COLOR_INSTANCE,
-          opacity: CONSTANTS.OPACITY_NON_SCATTER
+          opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
+          id: 'network_circle-' + i
+        }).on("mouseover", function () {
+          ScatterPlot.handleMouseOver(p, networks[i], i);
+        }).on("mouseout", function () {
+          ScatterPlot.handleMouseOut(p, i);
         });
       });
     }
@@ -119,24 +124,60 @@ var ScatterPlot = function (_React$Component) {
       // Draw Axis and Legend
       var axisW = svgW / (numberOfAxis + 1);
       var axisH = svgH / (numberOfAxis + 1);
-      for (var i = 1; i <= numberOfAxis; i++) {
+      for (var _i = 1; _i <= numberOfAxis; _i++) {
         // 가로 선
         svg.append('line').attrs({
           x1: 0,
           x2: svgW,
-          y1: i * axisH,
-          y2: i * axisH,
+          y1: _i * axisH,
+          y2: _i * axisH,
           stroke: CONSTANTS.COLOR_AXIS
         });
         // 세로 선 
         svg.append('line').attrs({
-          x1: i * axisW,
-          x2: i * axisW,
+          x1: _i * axisW,
+          x2: _i * axisW,
           y1: 0,
           y2: svgH,
           stroke: CONSTANTS.COLOR_AXIS
         });
       }
+    }
+  }, {
+    key: 'handleMouseOver',
+    value: function handleMouseOver(point, network, idx) {
+      d3.select('#network_circle-' + idx).attrs({
+        fill: CONSTANTS.COLOR_HOVERED,
+        r: CONSTANTS.RADIUS_SCATTER * 3,
+        opacity: CONSTANTS.OPACITY_SELECTED
+      });
+
+      return;
+      // Specify where to put label of text
+      svg.append("text").attr({
+        id: "t" + d.x + "-" + d.y + "-" + i, // Create an id for text so we can select it later for removing on mouseout
+        x: function x() {
+          return xScale(d.x) - 30;
+        },
+        y: function y() {
+          return yScale(d.y) - 15;
+        }
+      }).text(function () {
+        return [d.x, d.y]; // Value of the text
+      });
+    }
+  }, {
+    key: 'handleMouseOut',
+    value: function handleMouseOut(point, idx) {
+      d3.select('#network_circle-' + idx).attrs({
+        fill: CONSTANTS.COLOR_INSTANCE,
+        r: CONSTANTS.RADIUS_SCATTER,
+        opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER
+      });
+
+      return;
+      // Select text by id and then remove
+      d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
     }
   }]);
 

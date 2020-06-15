@@ -68,3 +68,8 @@ body {
 .section__diagram {
   flex: 1;
 }
+
+.network_circle {
+  border: 1px solid #f00;
+  fill: #0F0 !important;
+}

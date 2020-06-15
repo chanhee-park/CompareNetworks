@@ -165,7 +165,7 @@ var PCoord = function (_React$Component) {
       }).curve(d3.curveMonotoneX);
       // curveLinear, curveBasis, curveMonotoneX, curveCatmullRom.alpha(1)
 
-      networks.forEach(function (n) {
+      networks.forEach(function (n, i) {
         // Set Line Data
         var lineData = [];
         statNames.forEach(function (k, j) {
@@ -181,14 +181,55 @@ var PCoord = function (_React$Component) {
         // Draw Line
         svg.append("path").attrs({
           d: lineFunction(lineData),
+          fill: "none",
           stroke: CONSTANTS.COLOR_INSTANCE,
-          opacity: CONSTANTS.OPACITY_NON_PCOORD,
-          "stroke-width": 2,
-          fill: "none"
+          "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
+          opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
+          id: 'network_path-' + i
+        }).on("mouseover", function () {
+          PCoord.handleMouseOver(n, i);
+        }).on("mouseout", function () {
+          PCoord.handleMouseOut(n, i);
         });
       });
 
       return;
+    }
+  }, {
+    key: 'handleMouseOver',
+    value: function handleMouseOver(network, idx) {
+      d3.select('#network_path-' + idx).attrs({
+        stroke: CONSTANTS.COLOR_HOVERED,
+        "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 3,
+        opacity: CONSTANTS.OPACITY_SELECTED
+      });
+
+      return;
+      // Specify where to put label of text
+      svg.append("text").attr({
+        id: "t" + d.x + "-" + d.y + "-" + i, // Create an id for text so we can select it later for removing on mouseout
+        x: function x() {
+          return xScale(d.x) - 30;
+        },
+        y: function y() {
+          return yScale(d.y) - 15;
+        }
+      }).text(function () {
+        return [d.x, d.y]; // Value of the text
+      });
+    }
+  }, {
+    key: 'handleMouseOut',
+    value: function handleMouseOut(point, idx) {
+      d3.select('#network_path-' + idx).attrs({
+        stroke: CONSTANTS.COLOR_INSTANCE,
+        "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
+        opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD
+      });
+
+      return;
+      // Select text by id and then remove
+      d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
     }
   }]);
 

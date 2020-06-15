@@ -122,7 +122,7 @@ class PCoord extends React.Component {
       .curve(d3.curveMonotoneX);
     // curveLinear, curveBasis, curveMonotoneX, curveCatmullRom.alpha(1)
 
-    networks.forEach(n => {
+    networks.forEach((n, i) => {
       // Set Line Data
       const lineData = [];
       statNames.forEach((k, j) => {
@@ -139,14 +139,49 @@ class PCoord extends React.Component {
       svg.append("path")
         .attrs({
           d: lineFunction(lineData),
-          stroke: CONSTANTS.COLOR_INSTANCE,
-          opacity: CONSTANTS.OPACITY_NON_PCOORD,
-          "stroke-width": 2,
           fill: "none",
+          stroke: CONSTANTS.COLOR_INSTANCE,
+          "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
+          opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
+          id: `network_path-${i}`
+        }).on("mouseover", () => {
+          PCoord.handleMouseOver(n, i);
+        }).on("mouseout", () => {
+          PCoord.handleMouseOut(n, i)
         });
     });
 
     return;
+  }
+
+  static handleMouseOver (network, idx) {
+    d3.select(`#network_path-${idx}`).attrs({
+      stroke: CONSTANTS.COLOR_HOVERED,
+      "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 3,
+      opacity: CONSTANTS.OPACITY_SELECTED
+    });
+
+    return;
+    // Specify where to put label of text
+    svg.append("text").attr({
+      id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
+      x: function () { return xScale(d.x) - 30; },
+      y: function () { return yScale(d.y) - 15; }
+    }).text(function () {
+      return [d.x, d.y];  // Value of the text
+    });
+  }
+
+  static handleMouseOut (point, idx) {
+    d3.select(`#network_path-${idx}`).attrs({
+      stroke: CONSTANTS.COLOR_INSTANCE,
+      "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
+      opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD
+    });
+
+    return;
+    // Select text by id and then remove
+    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
   }
 
   render () {
