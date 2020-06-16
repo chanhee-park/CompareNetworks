@@ -15,12 +15,18 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      selected: []
+      selected: [undefined, undefined],
+      hovered: undefined
     };
     return _this;
   }
 
   _createClass(App, [{
+    key: "changeHoveredNetwork",
+    value: function changeHoveredNetwork(network) {
+      this.setState({ hovered: network });
+    }
+  }, {
     key: "render",
     value: function render() {
       return React.createElement(
@@ -38,7 +44,8 @@ var App = function (_React$Component) {
             "div",
             { className: "section section__pcoord", id: "svg_parent__pcoord" },
             React.createElement(PCoord, { networks: this.props.networks, selected: this.state.selected })
-          )
+          ),
+          React.createElement(Tooltip, null)
         ),
         React.createElement(
           "div",

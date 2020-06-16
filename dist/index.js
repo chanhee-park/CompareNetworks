@@ -16,9 +16,9 @@ ReactDOM.render(React.createElement(App, { networks: networks }), document.getEl
 
 // DONE(0613): sactter.js 기본
 // DONE(0614): pcoord.js 기본
-// DONE(0614): Hover event on scatter and pcoord
+// DONE(0614): highlight: hover event on scatter and pcoord
+// DONE(0615): tooltip.js: hover event on scatter and pcoord
 
-// TODO: tooltip (hover)
 // TODO: click (select) on scatter and pcoord
 // TODO: scatter - pcoord 상호 인터렉션 (호버, 선택)
 
@@ -26,7 +26,7 @@ ReactDOM.render(React.createElement(App, { networks: networks }), document.getEl
 // TODO: diagram.js -> matrix-diagram
 // TODO: diagram.js -> circos-diagram
 
-// TODO: pcoord.js (lines, heatmap, and boxplot)
+// TODO: pcoord.js (heatmap, and boxplot)
 
 // TODO: diagram -> 대형 다이어그램에 통계치 표시
 // TODO: diagram - 위치 변경

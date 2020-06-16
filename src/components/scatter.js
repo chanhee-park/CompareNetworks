@@ -62,8 +62,7 @@ class ScatterPlot extends React.Component {
     svg.selectAll("*").remove();
     ScatterPlot.drawAxisLines(svg, 5);
     ScatterPlot.drawPoints(points, svg, padding);
-    // TODO: 안내선
-    // TODO: 확대 축소 클릭 호버 인터랙션
+    // TODO: 확대 축소 인터랙션
     return;
   }
 
@@ -77,9 +76,9 @@ class ScatterPlot extends React.Component {
         opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
         id: `network_circle-${i}`
       }).on("mouseover", () => {
-        ScatterPlot.handleMouseOver(p, networks[i], i);
+        ScatterPlot.handleMouseOver(i, networks[i], d3.event.pageX, d3.event.pageY);
       }).on("mouseout", () => {
-        ScatterPlot.handleMouseOut(p, i)
+        ScatterPlot.handleMouseOut(i);
       });
     });
   }
@@ -113,34 +112,32 @@ class ScatterPlot extends React.Component {
     }
   }
 
-  static handleMouseOver (point, network, idx) {
-    d3.select(`#network_circle-${idx}`).attrs({
+  static handleMouseOver (idx, network, mouseX, mouseY) {
+    ScatterPlot.highlightCircle(`#network_circle-${idx}`);
+    PCoord.highlightPath(`#network_path-${idx}`);
+    Tooltip.show(mouseX, mouseY, network);
+  }
+
+  static handleMouseOut (idx) {
+    ScatterPlot.dehighlightCircle(`#network_circle-${idx}`);
+    PCoord.dehighlightPath(`#network_path-${idx}`);
+    Tooltip.hidden();
+  }
+
+  static highlightCircle (selector) {
+    d3.select(selector).attrs({
       fill: CONSTANTS.COLOR_HOVERED,
       r: CONSTANTS.RADIUS_SCATTER * 3,
       opacity: CONSTANTS.OPACITY_SELECTED
     });
-
-    return;
-    // Specify where to put label of text
-    svg.append("text").attr({
-      id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
-      x: function () { return xScale(d.x) - 30; },
-      y: function () { return yScale(d.y) - 15; }
-    }).text(function () {
-      return [d.x, d.y];  // Value of the text
-    });
   }
 
-  static handleMouseOut (point, idx) {
-    d3.select(`#network_circle-${idx}`).attrs({
+  static dehighlightCircle (selector) {
+    d3.select(selector).attrs({
       fill: CONSTANTS.COLOR_INSTANCE,
       r: CONSTANTS.RADIUS_SCATTER,
       opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER
     });
-
-    return;
-    // Select text by id and then remove
-    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
   }
 
   render () {

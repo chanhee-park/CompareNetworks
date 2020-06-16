@@ -1,5 +1,8 @@
 class PCoord extends React.Component {
   constructor(props) {
+    // TODO: 축에 boxplot 추가
+    // TODO: 축 위에 히스토그램 추가: 필터링 기능 제공
+    // TODO: 유저가 축 선택 (축 별로 히스토그램 보여주기)
     super(props);
     this.state = {
       svgId: 'svg__pcoord',
@@ -145,43 +148,41 @@ class PCoord extends React.Component {
           opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
           id: `network_path-${i}`
         }).on("mouseover", () => {
-          PCoord.handleMouseOver(n, i);
+          PCoord.handleMouseOver(i, n, d3.event.pageX, d3.event.pageY);
         }).on("mouseout", () => {
-          PCoord.handleMouseOut(n, i)
+          PCoord.handleMouseOut(i);
         });
     });
 
     return;
   }
 
-  static handleMouseOver (network, idx) {
-    d3.select(`#network_path-${idx}`).attrs({
+  static handleMouseOver (idx, network, mouseX, mouseY) {
+    ScatterPlot.highlightCircle(`#network_circle-${idx}`);
+    PCoord.highlightPath(`#network_path-${idx}`);
+    Tooltip.show(mouseX, mouseY, network);
+  }
+
+  static handleMouseOut (idx) {
+    ScatterPlot.dehighlightCircle(`#network_circle-${idx}`);
+    PCoord.dehighlightPath(`#network_path-${idx}`);
+    Tooltip.hidden();
+  }
+
+  static highlightPath (selector) {
+    d3.select(selector).attrs({
       stroke: CONSTANTS.COLOR_HOVERED,
       "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 3,
       opacity: CONSTANTS.OPACITY_SELECTED
     });
-
-    return;
-    // Specify where to put label of text
-    svg.append("text").attr({
-      id: "t" + d.x + "-" + d.y + "-" + i,  // Create an id for text so we can select it later for removing on mouseout
-      x: function () { return xScale(d.x) - 30; },
-      y: function () { return yScale(d.y) - 15; }
-    }).text(function () {
-      return [d.x, d.y];  // Value of the text
-    });
   }
 
-  static handleMouseOut (point, idx) {
-    d3.select(`#network_path-${idx}`).attrs({
+  static dehighlightPath (selector) {
+    d3.select(selector).attrs({
       stroke: CONSTANTS.COLOR_INSTANCE,
       "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
       opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD
     });
-
-    return;
-    // Select text by id and then remove
-    d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
   }
 
   render () {

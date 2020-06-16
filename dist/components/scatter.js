@@ -91,8 +91,7 @@ var ScatterPlot = function (_React$Component) {
       svg.selectAll("*").remove();
       ScatterPlot.drawAxisLines(svg, 5);
       ScatterPlot.drawPoints(points, svg, padding);
-      // TODO: 안내선
-      // TODO: 확대 축소 클릭 호버 인터랙션
+      // TODO: 확대 축소 인터랙션
       return;
     }
   }, {
@@ -107,9 +106,9 @@ var ScatterPlot = function (_React$Component) {
           opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
           id: 'network_circle-' + i
         }).on("mouseover", function () {
-          ScatterPlot.handleMouseOver(p, networks[i], i);
+          ScatterPlot.handleMouseOver(i, networks[i], d3.event.pageX, d3.event.pageY);
         }).on("mouseout", function () {
-          ScatterPlot.handleMouseOut(p, i);
+          ScatterPlot.handleMouseOut(i);
         });
       });
     }
@@ -124,19 +123,19 @@ var ScatterPlot = function (_React$Component) {
       // Draw Axis and Legend
       var axisW = svgW / (numberOfAxis + 1);
       var axisH = svgH / (numberOfAxis + 1);
-      for (var _i = 1; _i <= numberOfAxis; _i++) {
+      for (var i = 1; i <= numberOfAxis; i++) {
         // 가로 선
         svg.append('line').attrs({
           x1: 0,
           x2: svgW,
-          y1: _i * axisH,
-          y2: _i * axisH,
+          y1: i * axisH,
+          y2: i * axisH,
           stroke: CONSTANTS.COLOR_AXIS
         });
         // 세로 선 
         svg.append('line').attrs({
-          x1: _i * axisW,
-          x2: _i * axisW,
+          x1: i * axisW,
+          x2: i * axisW,
           y1: 0,
           y2: svgH,
           stroke: CONSTANTS.COLOR_AXIS
@@ -145,39 +144,35 @@ var ScatterPlot = function (_React$Component) {
     }
   }, {
     key: 'handleMouseOver',
-    value: function handleMouseOver(point, network, idx) {
-      d3.select('#network_circle-' + idx).attrs({
+    value: function handleMouseOver(idx, network, mouseX, mouseY) {
+      ScatterPlot.highlightCircle('#network_circle-' + idx);
+      PCoord.highlightPath('#network_path-' + idx);
+      Tooltip.show(mouseX, mouseY, network);
+    }
+  }, {
+    key: 'handleMouseOut',
+    value: function handleMouseOut(idx) {
+      ScatterPlot.dehighlightCircle('#network_circle-' + idx);
+      PCoord.dehighlightPath('#network_path-' + idx);
+      Tooltip.hidden();
+    }
+  }, {
+    key: 'highlightCircle',
+    value: function highlightCircle(selector) {
+      d3.select(selector).attrs({
         fill: CONSTANTS.COLOR_HOVERED,
         r: CONSTANTS.RADIUS_SCATTER * 3,
         opacity: CONSTANTS.OPACITY_SELECTED
       });
-
-      return;
-      // Specify where to put label of text
-      svg.append("text").attr({
-        id: "t" + d.x + "-" + d.y + "-" + i, // Create an id for text so we can select it later for removing on mouseout
-        x: function x() {
-          return xScale(d.x) - 30;
-        },
-        y: function y() {
-          return yScale(d.y) - 15;
-        }
-      }).text(function () {
-        return [d.x, d.y]; // Value of the text
-      });
     }
   }, {
-    key: 'handleMouseOut',
-    value: function handleMouseOut(point, idx) {
-      d3.select('#network_circle-' + idx).attrs({
+    key: 'dehighlightCircle',
+    value: function dehighlightCircle(selector) {
+      d3.select(selector).attrs({
         fill: CONSTANTS.COLOR_INSTANCE,
         r: CONSTANTS.RADIUS_SCATTER,
         opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER
       });
-
-      return;
-      // Select text by id and then remove
-      d3.select("#t" + d.x + "-" + d.y + "-" + i).remove();
     }
   }]);
 

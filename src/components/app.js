@@ -2,8 +2,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: [],
+      selected: [undefined, undefined],
+      hovered: undefined,
     }
+  }
+
+  changeHoveredNetwork (network) {
+    this.setState({ hovered: network });
   }
 
   render () {
@@ -17,6 +22,7 @@ class App extends React.Component {
           <div className="section section__pcoord" id="svg_parent__pcoord">
             < PCoord networks={this.props.networks} selected={this.state.selected} />
           </div>
+          <Tooltip />
         </div>
 
         <div className="row row--second">
