@@ -8,6 +8,10 @@ body {
   padding: 5px;
 }
 
+.hidden {
+  display: none;
+}
+
 .app {
   background: #fff;
   width: 1920px;

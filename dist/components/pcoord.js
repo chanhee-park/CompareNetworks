@@ -18,6 +18,23 @@ var PCoord = function (_React$Component) {
     // TODO: 유저가 축 선택 (축 별로 히스토그램 보여주기)
 
 
+    _this.handleMouseOver = function (idx, network, mouseX, mouseY) {
+      ScatterPlot.highlightCircle('#network_circle-' + idx);
+      PCoord.highlightPath('#network_path-' + idx);
+      Tooltip.show(mouseX, mouseY, network);
+    };
+
+    _this.handleMouseOut = function (idx) {
+      ScatterPlot.dehighlightCircle('#network_circle-' + idx);
+      PCoord.dehighlightPath('#network_path-' + idx);
+      Tooltip.hidden();
+    };
+
+    _this.handleMouseClick = function (idx) {
+      SelectionPopup.show(_this.props.networks[idx]);
+      _this.props.clickedChanger(idx);
+    };
+
     _this.state = {
       svgId: 'svg__pcoord',
       totalStats: ['N', 'E', 'D', 'degree_min', 'degree_max', 'degree_avg', 'T', 'T_max', 'T_avg', 'dist_max', 'dist_avg'],
@@ -42,19 +59,16 @@ var PCoord = function (_React$Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
-      PCoord.draw(this.props.networks, this.state.seletedStats, this.props.selected, this.state.svg);
+      this.draw(this.props.networks, this.state.seletedStats, this.props.selected, this.state.svg);
     }
 
     // Parallel Coordinate를 그린다.
 
   }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement('svg', { id: this.state.svgId });
-    }
-  }], [{
     key: 'draw',
     value: function draw(networks, statNames, selected, svg) {
+      var _this2 = this;
+
       svg.selectAll("*").remove();
       var statsMinMax = PCoord.getMinMaxOfStats(networks, statNames);
 
@@ -159,27 +173,20 @@ var PCoord = function (_React$Component) {
           opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
           id: 'network_path-' + i
         }).on("mouseover", function () {
-          PCoord.handleMouseOver(i, n, d3.event.pageX, d3.event.pageY);
+          return _this2.handleMouseOver(i, n, d3.event.pageX, d3.event.pageY);
         }).on("mouseout", function () {
-          PCoord.handleMouseOut(i);
+          return _this2.handleMouseOut(i);
+        }).on("click", function () {
+          return _this2.handleMouseClick(i);
         });
       });
     }
   }, {
-    key: 'handleMouseOver',
-    value: function handleMouseOver(idx, network, mouseX, mouseY) {
-      ScatterPlot.highlightCircle('#network_circle-' + idx);
-      PCoord.highlightPath('#network_path-' + idx);
-      Tooltip.show(mouseX, mouseY, network);
+    key: 'render',
+    value: function render() {
+      return React.createElement('svg', { id: this.state.svgId });
     }
-  }, {
-    key: 'handleMouseOut',
-    value: function handleMouseOut(idx) {
-      ScatterPlot.dehighlightCircle('#network_circle-' + idx);
-      PCoord.dehighlightPath('#network_path-' + idx);
-      Tooltip.hidden();
-    }
-  }, {
+  }], [{
     key: 'highlightPath',
     value: function highlightPath(selector) {
       d3.select(selector).attrs({

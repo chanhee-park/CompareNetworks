@@ -122,7 +122,7 @@ class Tooltip extends React.Component {
 
   render () {
     return (
-      <div id="tooltip" class="hidden">
+      <div id="tooltip" className="hidden">
         <div className="title">Hovered Network</div>
         <div className="description" id="description" />
       </div >

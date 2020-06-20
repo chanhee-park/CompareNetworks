@@ -6,42 +6,54 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var SelectionPopUp = function (_React$Component) {
-  _inherits(SelectionPopUp, _React$Component);
+var SelectionPopup = function (_React$Component) {
+  _inherits(SelectionPopup, _React$Component);
 
-  function SelectionPopUp(props) {
-    _classCallCheck(this, SelectionPopUp);
+  function SelectionPopup(props) {
+    _classCallCheck(this, SelectionPopup);
 
-    return _possibleConstructorReturn(this, (SelectionPopUp.__proto__ || Object.getPrototypeOf(SelectionPopUp)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (SelectionPopup.__proto__ || Object.getPrototypeOf(SelectionPopup)).call(this, props));
+
+    _this.setLeft = function () {
+      SelectionPopup.hidden();
+      _this.props.selectedChanger(0);
+    };
+
+    _this.setRight = function () {
+      SelectionPopup.hidden();
+      _this.props.selectedChanger(1);
+    };
+
+    return _this;
   }
 
-  _createClass(SelectionPopUp, [{
+  _createClass(SelectionPopup, [{
     key: "render",
     value: function render() {
       return React.createElement(
         "div",
-        { id: "selctionPopUp" },
+        { className: "popup hidden", id: "selctionPopup" },
         React.createElement(
           "div",
-          { className: "title" },
-          "Show Network Diagram in:"
+          { className: "popup__title" },
+          "Show Network Diagram in"
         ),
         React.createElement(
           "div",
-          { className: "options" },
+          { className: "popup__options" },
           React.createElement(
             "div",
-            { className: "options__button options__button--opt1" },
+            { className: "popup__option_button popup__option_button--opt1", onClick: this.setLeft },
             "Left"
           ),
           React.createElement(
             "div",
-            { className: "options__button options__button--opt2" },
+            { className: "popup__option_button popup__option_button--opt2", onClick: this.setRight },
             "Right"
           ),
           React.createElement(
             "div",
-            { className: "options__button options__button--cancle" },
+            { className: "popup__option_button popup__option_button--cancle", onClick: SelectionPopup.hidden },
             "Cancle"
           )
         )
@@ -49,16 +61,15 @@ var SelectionPopUp = function (_React$Component) {
     }
   }], [{
     key: "show",
-    value: function show(network) {
-      d3.select("#selctionPopUp").classed("hidden", false);
-      Tooltip.drawDegreeHistogram(network.stat.degrees);
+    value: function show() {
+      d3.select("#selctionPopup").classed("hidden", false);
     }
   }, {
     key: "hidden",
     value: function hidden() {
-      d3.select("#selctionPopUp").classed("hidden", true);
+      d3.select("#selctionPopup").classed("hidden", true);
     }
   }]);
 
-  return SelectionPopUp;
+  return SelectionPopup;
 }(React.Component);

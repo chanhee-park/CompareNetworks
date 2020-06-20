@@ -14,24 +14,28 @@ var App = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
+    _this.changeClickedNetwork = function (networkIdx) {
+      _this.setState({ clicked: networkIdx });
+    };
+
+    _this.changeSelectedNetwork = function (i) {
+      var newSelected = _this.state.selected;
+      newSelected[i] = _this.state.clicked;
+      _this.setState({ selected: newSelected });
+    };
+
     _this.state = {
+      clicked: 0,
       selected: [0, 1]
     };
     return _this;
   }
 
   _createClass(App, [{
-    key: "changeSelectedNetwork",
-    value: function changeSelectedNetwork(network, i) {
-      var newSelected = this.state.selected;
-      newSelected[i] = network;
-      this.setState({ selected: newSelected });
-    }
+    key: "render",
+
 
     // TODO: Scatter, Parallel, Tooltip의 함수들 Non-Static 하게 변경
-
-  }, {
-    key: "render",
     value: function render() {
       return React.createElement(
         "div",
@@ -42,15 +46,15 @@ var App = function (_React$Component) {
           React.createElement(
             "div",
             { className: "section section__scatter", id: "svg_parent__scatter" },
-            React.createElement(ScatterPlot, { networks: this.props.networks, selected: this.state.selected })
+            React.createElement(ScatterPlot, { networks: this.props.networks, selected: this.state.selected, clickedChanger: this.changeClickedNetwork })
           ),
           React.createElement(
             "div",
             { className: "section section__pcoord", id: "svg_parent__pcoord" },
-            React.createElement(PCoord, { networks: this.props.networks, selected: this.state.selected })
+            React.createElement(PCoord, { networks: this.props.networks, selected: this.state.selected, clickedChanger: this.changeClickedNetwork })
           ),
           React.createElement(Tooltip, null),
-          React.createElement(SelectionPopUp, null)
+          React.createElement(SelectionPopup, { clickedIdx: this.state.clicked, selectedChanger: this.changeSelectedNetwork })
         ),
         React.createElement(
           "div",

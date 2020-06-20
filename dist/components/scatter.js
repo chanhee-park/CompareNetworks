@@ -14,6 +14,23 @@ var ScatterPlot = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (ScatterPlot.__proto__ || Object.getPrototypeOf(ScatterPlot)).call(this, props));
 
+    _this.handleMouseOver = function (idx, network, mouseX, mouseY) {
+      ScatterPlot.highlightCircle('#network_circle-' + idx);
+      PCoord.highlightPath('#network_path-' + idx);
+      Tooltip.show(mouseX, mouseY, network);
+    };
+
+    _this.handleMouseOut = function (idx) {
+      ScatterPlot.dehighlightCircle('#network_circle-' + idx);
+      PCoord.dehighlightPath('#network_path-' + idx);
+      Tooltip.hidden();
+    };
+
+    _this.handleMouseClick = function (idx) {
+      SelectionPopup.show(_this.props.networks[idx]);
+      _this.props.clickedChanger(idx);
+    };
+
     _this.state = {
       svgId: 'svg__scatter',
       padding: 20,
@@ -86,6 +103,8 @@ var ScatterPlot = function (_React$Component) {
   }, {
     key: 'drawPoints',
     value: function drawPoints(points, svg, padding) {
+      var _this2 = this;
+
       points.forEach(function (p, i) {
         svg.append('circle').attrs({
           cx: p.x + padding,
@@ -97,9 +116,11 @@ var ScatterPlot = function (_React$Component) {
           opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
           id: 'network_circle-' + i
         }).on("mouseover", function () {
-          ScatterPlot.handleMouseOver(i, networks[i], d3.event.pageX, d3.event.pageY);
+          return _this2.handleMouseOver(i, networks[i], d3.event.pageX, d3.event.pageY);
         }).on("mouseout", function () {
-          ScatterPlot.handleMouseOut(i);
+          return _this2.handleMouseOut(i);
+        }).on("click", function () {
+          return _this2.handleMouseClick(i);
         });
       });
     }
@@ -158,20 +179,6 @@ var ScatterPlot = function (_React$Component) {
         var y = (p[1] - min[1]) / sub[1] * grahpSize;
         return { x: x, y: y };
       });
-    }
-  }, {
-    key: 'handleMouseOver',
-    value: function handleMouseOver(idx, network, mouseX, mouseY) {
-      ScatterPlot.highlightCircle('#network_circle-' + idx);
-      PCoord.highlightPath('#network_path-' + idx);
-      Tooltip.show(mouseX, mouseY, network);
-    }
-  }, {
-    key: 'handleMouseOut',
-    value: function handleMouseOut(idx) {
-      ScatterPlot.dehighlightCircle('#network_circle-' + idx);
-      PCoord.dehighlightPath('#network_path-' + idx);
-      Tooltip.hidden();
     }
   }, {
     key: 'highlightCircle',

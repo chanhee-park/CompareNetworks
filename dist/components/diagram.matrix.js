@@ -39,6 +39,8 @@ var MatrixDiagram = function (_React$Component) {
   }, {
     key: "draw",
     value: function draw() {
+      this.state.svg.selectAll("*").remove();
+
       var matrix = this.props.network.matrix;
       var N = matrix.length;
       var cellSize = this.state.graphSize / N;

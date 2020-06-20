@@ -74,11 +74,9 @@ class ScatterPlot extends React.Component {
         'stroke-width': '0px',
         opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
         id: `network_circle-${i}`
-      }).on("mouseover", () => {
-        ScatterPlot.handleMouseOver(i, networks[i], d3.event.pageX, d3.event.pageY);
-      }).on("mouseout", () => {
-        ScatterPlot.handleMouseOut(i);
-      });
+      }).on("mouseover", () => this.handleMouseOver(i, networks[i], d3.event.pageX, d3.event.pageY))
+        .on("mouseout", () => this.handleMouseOut(i))
+        .on("click", () => this.handleMouseClick(i));
     });
   }
 
@@ -129,16 +127,21 @@ class ScatterPlot extends React.Component {
     });
   }
 
-  static handleMouseOver (idx, network, mouseX, mouseY) {
+  handleMouseOver = (idx, network, mouseX, mouseY) => {
     ScatterPlot.highlightCircle(`#network_circle-${idx}`);
     PCoord.highlightPath(`#network_path-${idx}`);
     Tooltip.show(mouseX, mouseY, network);
   }
 
-  static handleMouseOut (idx) {
+  handleMouseOut = (idx) => {
     ScatterPlot.dehighlightCircle(`#network_circle-${idx}`);
     PCoord.dehighlightPath(`#network_path-${idx}`);
     Tooltip.hidden();
+  }
+
+  handleMouseClick = (idx) => {
+    SelectionPopup.show(this.props.networks[idx]);
+    this.props.clickedChanger(idx);
   }
 
   static highlightCircle (selector) {

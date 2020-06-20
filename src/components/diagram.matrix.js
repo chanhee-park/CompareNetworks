@@ -21,6 +21,8 @@ class MatrixDiagram extends React.Component {
   }
 
   draw () {
+    this.state.svg.selectAll("*").remove();
+
     const matrix = this.props.network.matrix;
     const N = matrix.length;
     const cellSize = this.state.graphSize / N;

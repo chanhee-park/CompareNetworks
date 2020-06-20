@@ -32,11 +32,11 @@ class PCoord extends React.Component {
   }
 
   componentDidUpdate () {
-    PCoord.draw(this.props.networks, this.state.seletedStats, this.props.selected, this.state.svg);
+    this.draw(this.props.networks, this.state.seletedStats, this.props.selected, this.state.svg);
   }
 
   // Parallel Coordinate를 그린다.
-  static draw (networks, statNames, selected, svg) {
+  draw (networks, statNames, selected, svg) {
     svg.selectAll("*").remove();
     const statsMinMax = PCoord.getMinMaxOfStats(networks, statNames);
 
@@ -132,32 +132,34 @@ class PCoord extends React.Component {
       }
 
       // Draw Line
-      svg.append("path")
-        .attrs({
-          d: lineFunction(lineData),
-          fill: "none",
-          stroke: color,
-          "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
-          opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
-          id: `network_path-${i}`
-        }).on("mouseover", () => {
-          PCoord.handleMouseOver(i, n, d3.event.pageX, d3.event.pageY);
-        }).on("mouseout", () => {
-          PCoord.handleMouseOut(i);
-        });
+      svg.append("path").attrs({
+        d: lineFunction(lineData),
+        fill: "none",
+        stroke: color,
+        "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
+        opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
+        id: `network_path-${i}`
+      }).on("mouseover", () => this.handleMouseOver(i, n, d3.event.pageX, d3.event.pageY))
+        .on("mouseout", () => this.handleMouseOut(i))
+        .on("click", () => this.handleMouseClick(i));
     });
   }
 
-  static handleMouseOver (idx, network, mouseX, mouseY) {
+  handleMouseOver = (idx, network, mouseX, mouseY) => {
     ScatterPlot.highlightCircle(`#network_circle-${idx}`);
     PCoord.highlightPath(`#network_path-${idx}`);
     Tooltip.show(mouseX, mouseY, network);
   }
 
-  static handleMouseOut (idx) {
+  handleMouseOut = (idx) => {
     ScatterPlot.dehighlightCircle(`#network_circle-${idx}`);
     PCoord.dehighlightPath(`#network_path-${idx}`);
     Tooltip.hidden();
+  }
+
+  handleMouseClick = (idx) => {
+    SelectionPopup.show(this.props.networks[idx]);
+    this.props.clickedChanger(idx);
   }
 
   static highlightPath (selector) {

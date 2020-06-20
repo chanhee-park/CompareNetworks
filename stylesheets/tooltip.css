@@ -13,10 +13,6 @@
   pointer-events: none;
 }
 
-#tooltip.hidden {
-  display: none;
-}
-
 #tooltip .title {
   font-size: 28px;
   line-height: 36px;

@@ -2,13 +2,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      clicked: 0,
       selected: [0, 1],
     }
   }
 
-  changeSelectedNetwork (network, i) {
+  changeClickedNetwork = (networkIdx) => {
+    this.setState({ clicked: networkIdx });
+  }
+
+  changeSelectedNetwork = (i) => {
     const newSelected = this.state.selected;
-    newSelected[i] = network
+    newSelected[i] = this.state.clicked;
     this.setState({ selected: newSelected });
   }
 
@@ -18,14 +23,14 @@ class App extends React.Component {
       <div className="app">
         <div className="row row--first">
           <div className="section section__scatter" id="svg_parent__scatter">
-            < ScatterPlot networks={this.props.networks} selected={this.state.selected} />
+            < ScatterPlot networks={this.props.networks} selected={this.state.selected} clickedChanger={this.changeClickedNetwork} />
           </div>
 
           <div className="section section__pcoord" id="svg_parent__pcoord">
-            < PCoord networks={this.props.networks} selected={this.state.selected} />
+            < PCoord networks={this.props.networks} selected={this.state.selected} clickedChanger={this.changeClickedNetwork} />
           </div>
           <Tooltip />
-          <SelectionPopUp />
+          <SelectionPopup clickedIdx={this.state.clicked} selectedChanger={this.changeSelectedNetwork} />
         </div>
 
         <div className="row row--second">
