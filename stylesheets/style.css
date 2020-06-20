@@ -73,3 +73,8 @@ body {
   border: 1px solid #f00;
   fill: #0F0 !important;
 }
+
+svg {
+  width: 100%;
+  height: 100%;
+}

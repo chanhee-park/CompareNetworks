@@ -2,15 +2,17 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: [undefined, undefined],
-      hovered: undefined,
+      selected: [0, 1],
     }
   }
 
-  changeHoveredNetwork (network) {
-    this.setState({ hovered: network });
+  changeSelectedNetwork (network, i) {
+    const newSelected = this.state.selected;
+    newSelected[i] = network
+    this.setState({ selected: newSelected });
   }
 
+  // TODO: Scatter, Parallel, Tooltip의 함수들 Non-Static 하게 변경
   render () {
     return (
       <div className="app">
@@ -28,7 +30,7 @@ class App extends React.Component {
         <div className="row row--second">
           <div className="container container__diagram container__diagram--small">
             <div className="section section__diagram section__diagram--small">
-              {/* TODO: < Diagram network={this.props.selectedNetworks[0]} /> */}
+              < Diagram network={this.props.networks[this.state.selected[0]]} idx='1' type='matrix' />
             </div>
             <div className="section section__diagram section__diagram--small">
               {/* TODO: < Diagram network={this.props.selectedNetworks[1]} /> */}
@@ -49,7 +51,7 @@ class App extends React.Component {
 
           <div className="container container__diagram container__diagram--small">
             <div className="section section__diagram section__diagram--small">
-              {/* TODO: < Diagram network={this.props.selectedNetworks[4]} /> */}
+              < Diagram network={this.props.networks[this.state.selected[1]]} idx='4' type='matrix' />
             </div>
             <div className="section section__diagram section__diagram--small">
               {/* TODO: < Diagram network={this.props.selectedNetworks[5]} /> */}

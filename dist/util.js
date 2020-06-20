@@ -39,16 +39,15 @@ var Util = function () {
 
 
     // Get arraies by each key
-    value: function getArraiesByKey(collection) {
-      var keys = Object.keys(collection[0]);
+    value: function getArraiesByKey(collection, keys) {
       var ret = {};
-      keys.forEach(function (k) {
-        return ret[k] = [];
+      keys.forEach(function (key) {
+        return ret[key] = [];
       });
       collection.forEach(function (obj) {
-        for (var key in obj) {
-          ret[key].push(obj[key]);
-        }
+        return keys.forEach(function (key) {
+          return ret[key].push(obj[key]);
+        });
       });
       return ret;
     }

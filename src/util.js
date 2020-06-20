@@ -24,14 +24,9 @@ class Util {
 
   // Get arraies by each key
   static getArraiesByKey (collection, keys) {
-    const keys = Object.keys(collection[0]);
     const ret = {};
-    keys.forEach(k => ret[k] = []);
-    collection.forEach(obj => {
-      for (let key in keys) {
-        ret[key].push(obj[key]);
-      }
-    });
+    keys.forEach(key => ret[key] = []);
+    collection.forEach(obj => keys.forEach(key => ret[key].push(obj[key])));
     return ret;
   }
 

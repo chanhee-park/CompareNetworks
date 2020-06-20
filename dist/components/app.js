@@ -15,17 +15,21 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
     _this.state = {
-      selected: [undefined, undefined],
-      hovered: undefined
+      selected: [0, 1]
     };
     return _this;
   }
 
   _createClass(App, [{
-    key: "changeHoveredNetwork",
-    value: function changeHoveredNetwork(network) {
-      this.setState({ hovered: network });
+    key: "changeSelectedNetwork",
+    value: function changeSelectedNetwork(network, i) {
+      var newSelected = this.state.selected;
+      newSelected[i] = network;
+      this.setState({ selected: newSelected });
     }
+
+    // TODO: Scatter, Parallel, Tooltip의 함수들 Non-Static 하게 변경
+
   }, {
     key: "render",
     value: function render() {
@@ -53,7 +57,11 @@ var App = function (_React$Component) {
           React.createElement(
             "div",
             { className: "container container__diagram container__diagram--small" },
-            React.createElement("div", { className: "section section__diagram section__diagram--small" }),
+            React.createElement(
+              "div",
+              { className: "section section__diagram section__diagram--small" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[0]], idx: "1", type: "matrix" })
+            ),
             React.createElement("div", { className: "section section__diagram section__diagram--small" })
           ),
           React.createElement(
@@ -69,7 +77,11 @@ var App = function (_React$Component) {
           React.createElement(
             "div",
             { className: "container container__diagram container__diagram--small" },
-            React.createElement("div", { className: "section section__diagram section__diagram--small" }),
+            React.createElement(
+              "div",
+              { className: "section section__diagram section__diagram--small" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[1]], idx: "4", type: "matrix" })
+            ),
             React.createElement("div", { className: "section section__diagram section__diagram--small" })
           )
         )

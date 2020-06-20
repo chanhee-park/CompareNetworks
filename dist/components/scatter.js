@@ -35,7 +35,7 @@ var ScatterPlot = function (_React$Component) {
 
       // get difference between networks and points of each network
       var diff = NetComparator.getDiffByStats(this.props.networks, this.state.seletedStats);
-      var points = ScatterPlot.getPoints(diff, grahpSize);
+      var points = this.getPoints(diff, grahpSize, this.props.selected);
 
       // set these on state
       this.setState({ svg: svg, grahpSize: grahpSize, diff: diff, points: points });
@@ -44,43 +44,32 @@ var ScatterPlot = function (_React$Component) {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
       // TODO: 네트워크 사이의 거리를 정하는 방법을 유저가 직접 지정할 수 있어야한다.
-      ScatterPlot.draw(this.state.points, this.state.svg, this.state.padding);
+      this.draw(this.state.points, this.state.svg, this.state.padding);
     }
 
-    // 네트워크간 차이(dist matrix)를 입력받아 각 네트워크  포인트의 포지션을 담는 배열을 반환한다. 
+    // 네트워크간 차이(dist matrix)를 입력받아 각 네트워크 포인트의 포지션을 담는 배열을 반환한다. 
 
   }, {
-    key: 'render',
-    value: function render() {
-      return React.createElement('svg', { id: this.state.svgId });
-    }
-  }], [{
     key: 'getPoints',
-    value: function getPoints(diff, grahpSize) {
+    value: function getPoints(diff, grahpSize, selected) {
+      // pca 차원 축소를 통해 포인트 위치 지정
       var points = Util.pca(diff);
+
+      // 그래프 사이즈에 맞춰서 포지션 조정
       var normPoints = ScatterPlot.getNormalizedPoints(points, grahpSize);
+
+      // 포인트 색상 지정
+      for (var i = 0; i < normPoints.length; i++) {
+        var color = CONSTANTS.COLOR_INSTANCE;
+        if (i == selected[0]) {
+          color = CONSTANTS.COLOR_SELECTED[0];
+        } else if (i == selected[1]) {
+          color = CONSTANTS.COLOR_SELECTED[1];
+        }
+        normPoints[i].color = color;
+      }
+
       return normPoints;
-    }
-
-    // normalize position of points (x축과 y축 개별적으로 정규화)
-
-  }, {
-    key: 'getNormalizedPoints',
-    value: function getNormalizedPoints(points, grahpSize) {
-      var min = [+Infinity, +Infinity];
-      var max = [-Infinity, -Infinity];
-      points.forEach(function (p) {
-        min[0] = Math.min(min[0], p[0]);
-        max[0] = Math.max(max[0], p[0]);
-        min[1] = Math.min(min[1], p[1]);
-        max[1] = Math.max(max[1], p[1]);
-      });
-      var sub = [max[0] - min[0], max[1] - min[1]];
-      return points.map(function (p) {
-        var x = (p[0] - min[0]) / sub[0] * grahpSize;
-        var y = (p[1] - min[1]) / sub[1] * grahpSize;
-        return [x, y];
-      });
     }
 
     // 스캐터플롯을 그린다.
@@ -89,8 +78,8 @@ var ScatterPlot = function (_React$Component) {
     key: 'draw',
     value: function draw(points, svg, padding) {
       svg.selectAll("*").remove();
-      ScatterPlot.drawAxisLines(svg, 5);
-      ScatterPlot.drawPoints(points, svg, padding);
+      this.drawAxisLines(svg, 5);
+      this.drawPoints(points, svg, padding);
       // TODO: 확대 축소 인터랙션
       return;
     }
@@ -99,10 +88,12 @@ var ScatterPlot = function (_React$Component) {
     value: function drawPoints(points, svg, padding) {
       points.forEach(function (p, i) {
         svg.append('circle').attrs({
-          cx: p[0] + padding,
-          cy: p[1] + padding,
+          cx: p.x + padding,
+          cy: p.y + padding,
           r: CONSTANTS.RADIUS_SCATTER,
-          fill: CONSTANTS.COLOR_INSTANCE,
+          fill: p.color,
+          stroke: '#777',
+          'stroke-width': '0px',
           opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
           id: 'network_circle-' + i
         }).on("mouseover", function () {
@@ -142,6 +133,32 @@ var ScatterPlot = function (_React$Component) {
         });
       }
     }
+
+    // normalize position of points (x축과 y축 개별적으로 정규화)
+
+  }, {
+    key: 'render',
+    value: function render() {
+      return React.createElement('svg', { id: this.state.svgId });
+    }
+  }], [{
+    key: 'getNormalizedPoints',
+    value: function getNormalizedPoints(points, grahpSize) {
+      var min = [+Infinity, +Infinity];
+      var max = [-Infinity, -Infinity];
+      points.forEach(function (p) {
+        min[0] = Math.min(min[0], p[0]);
+        max[0] = Math.max(max[0], p[0]);
+        min[1] = Math.min(min[1], p[1]);
+        max[1] = Math.max(max[1], p[1]);
+      });
+      var sub = [max[0] - min[0], max[1] - min[1]];
+      return points.map(function (p) {
+        var x = (p[0] - min[0]) / sub[0] * grahpSize;
+        var y = (p[1] - min[1]) / sub[1] * grahpSize;
+        return { x: x, y: y };
+      });
+    }
   }, {
     key: 'handleMouseOver',
     value: function handleMouseOver(idx, network, mouseX, mouseY) {
@@ -160,18 +177,18 @@ var ScatterPlot = function (_React$Component) {
     key: 'highlightCircle',
     value: function highlightCircle(selector) {
       d3.select(selector).attrs({
-        fill: CONSTANTS.COLOR_HOVERED,
         r: CONSTANTS.RADIUS_SCATTER * 3,
-        opacity: CONSTANTS.OPACITY_SELECTED
+        opacity: CONSTANTS.OPACITY_SELECTED,
+        'stroke-width': '2px'
       });
     }
   }, {
     key: 'dehighlightCircle',
     value: function dehighlightCircle(selector) {
       d3.select(selector).attrs({
-        fill: CONSTANTS.COLOR_INSTANCE,
         r: CONSTANTS.RADIUS_SCATTER,
-        opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER
+        opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
+        'stroke-width': '0px'
       });
     }
   }]);

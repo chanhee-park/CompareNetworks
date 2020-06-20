@@ -38,8 +38,7 @@ var Tooltip = function (_React$Component) {
   }], [{
     key: "show",
     value: function show(x, y, network) {
-      console.log();
-      d3.select("#tooltip").style("left", x + "px").style("top", y + "px").classed("hidden", false).select("#description").html(Tooltip.getTooltipTxt(network));
+      d3.select("#tooltip").style("left", x + 20 + "px").style("top", y + 10 + "px").classed("hidden", false).select("#description").html(Tooltip.getTooltipTxt(network));
       Tooltip.drawDegreeHistogram(network.stat.degrees);
     }
   }, {

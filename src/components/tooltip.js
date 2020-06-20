@@ -6,10 +6,9 @@ class Tooltip extends React.Component {
   // TODO: 툴팁 우측에 네트워크 다이어그램 추가.
 
   static show (x, y, network) {
-    console.log()
     d3.select("#tooltip")
-      .style("left", x + "px")
-      .style("top", y + "px")
+      .style("left", (x + 20) + "px")
+      .style("top", (y + 10) + "px")
       .classed("hidden", false)
       .select("#description")
       .html(Tooltip.getTooltipTxt(network));

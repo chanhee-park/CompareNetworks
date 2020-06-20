@@ -21,7 +21,7 @@ class ScatterPlot extends React.Component {
 
     // get difference between networks and points of each network
     const diff = NetComparator.getDiffByStats(this.props.networks, this.state.seletedStats);
-    const points = ScatterPlot.getPoints(diff, grahpSize);
+    const points = this.getPoints(diff, grahpSize, this.props.selected);
 
     // set these on state
     this.setState({ svg, grahpSize, diff, points });
@@ -29,50 +29,49 @@ class ScatterPlot extends React.Component {
 
   componentDidUpdate () {
     // TODO: 네트워크 사이의 거리를 정하는 방법을 유저가 직접 지정할 수 있어야한다.
-    ScatterPlot.draw(this.state.points, this.state.svg, this.state.padding);
+    this.draw(this.state.points, this.state.svg, this.state.padding);
   }
 
-  // 네트워크간 차이(dist matrix)를 입력받아 각 네트워크  포인트의 포지션을 담는 배열을 반환한다. 
-  static getPoints (diff, grahpSize) {
+  // 네트워크간 차이(dist matrix)를 입력받아 각 네트워크 포인트의 포지션을 담는 배열을 반환한다. 
+  getPoints (diff, grahpSize, selected) {
+    // pca 차원 축소를 통해 포인트 위치 지정
     const points = Util.pca(diff);
+
+    // 그래프 사이즈에 맞춰서 포지션 조정
     const normPoints = ScatterPlot.getNormalizedPoints(points, grahpSize);
+
+    // 포인트 색상 지정
+    for (let i = 0; i < normPoints.length; i++) {
+      let color = CONSTANTS.COLOR_INSTANCE;
+      if (i == selected[0]) {
+        color = CONSTANTS.COLOR_SELECTED[0]
+      } else if (i == selected[1]) {
+        color = CONSTANTS.COLOR_SELECTED[1]
+      }
+      normPoints[i].color = color;
+    }
+
     return normPoints;
   }
 
-  // normalize position of points (x축과 y축 개별적으로 정규화)
-  static getNormalizedPoints (points, grahpSize) {
-    const min = [+Infinity, +Infinity];
-    const max = [-Infinity, -Infinity]
-    points.forEach(p => {
-      min[0] = Math.min(min[0], p[0]);
-      max[0] = Math.max(max[0], p[0]);
-      min[1] = Math.min(min[1], p[1]);
-      max[1] = Math.max(max[1], p[1]);
-    });
-    const sub = [max[0] - min[0], max[1] - min[1]];
-    return points.map(p => {
-      const x = ((p[0] - min[0]) / sub[0]) * grahpSize;
-      const y = ((p[1] - min[1]) / sub[1]) * grahpSize;
-      return [x, y];
-    });
-  }
-
   // 스캐터플롯을 그린다.
-  static draw (points, svg, padding) {
+  draw (points, svg, padding) {
     svg.selectAll("*").remove();
-    ScatterPlot.drawAxisLines(svg, 5);
-    ScatterPlot.drawPoints(points, svg, padding);
+    this.drawAxisLines(svg, 5);
+    this.drawPoints(points, svg, padding);
     // TODO: 확대 축소 인터랙션
     return;
   }
 
-  static drawPoints (points, svg, padding) {
+  drawPoints (points, svg, padding) {
     points.forEach((p, i) => {
       svg.append('circle').attrs({
-        cx: p[0] + padding,
-        cy: p[1] + padding,
+        cx: p.x + padding,
+        cy: p.y + padding,
         r: CONSTANTS.RADIUS_SCATTER,
-        fill: CONSTANTS.COLOR_INSTANCE,
+        fill: p.color,
+        stroke: '#777',
+        'stroke-width': '0px',
         opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
         id: `network_circle-${i}`
       }).on("mouseover", () => {
@@ -83,7 +82,7 @@ class ScatterPlot extends React.Component {
     });
   }
 
-  static drawAxisLines (svg, numberOfAxis) {
+  drawAxisLines (svg, numberOfAxis) {
     // get svg box 
     const svgBBox = svg.node().getBoundingClientRect();
     const svgW = svgBBox.width;
@@ -112,6 +111,24 @@ class ScatterPlot extends React.Component {
     }
   }
 
+  // normalize position of points (x축과 y축 개별적으로 정규화)
+  static getNormalizedPoints (points, grahpSize) {
+    const min = [+Infinity, +Infinity];
+    const max = [-Infinity, -Infinity]
+    points.forEach(p => {
+      min[0] = Math.min(min[0], p[0]);
+      max[0] = Math.max(max[0], p[0]);
+      min[1] = Math.min(min[1], p[1]);
+      max[1] = Math.max(max[1], p[1]);
+    });
+    const sub = [max[0] - min[0], max[1] - min[1]];
+    return points.map(p => {
+      const x = ((p[0] - min[0]) / sub[0]) * grahpSize;
+      const y = ((p[1] - min[1]) / sub[1]) * grahpSize;
+      return { x, y };
+    });
+  }
+
   static handleMouseOver (idx, network, mouseX, mouseY) {
     ScatterPlot.highlightCircle(`#network_circle-${idx}`);
     PCoord.highlightPath(`#network_path-${idx}`);
@@ -126,17 +143,17 @@ class ScatterPlot extends React.Component {
 
   static highlightCircle (selector) {
     d3.select(selector).attrs({
-      fill: CONSTANTS.COLOR_HOVERED,
       r: CONSTANTS.RADIUS_SCATTER * 3,
-      opacity: CONSTANTS.OPACITY_SELECTED
+      opacity: CONSTANTS.OPACITY_SELECTED,
+      'stroke-width': '2px',
     });
   }
 
   static dehighlightCircle (selector) {
     d3.select(selector).attrs({
-      fill: CONSTANTS.COLOR_INSTANCE,
       r: CONSTANTS.RADIUS_SCATTER,
-      opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER
+      opacity: CONSTANTS.OPACITY_INSTANCE_SCATTER,
+      'stroke-width': '0px',
     });
   }
 
