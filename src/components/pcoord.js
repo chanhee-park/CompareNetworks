@@ -32,25 +32,11 @@ class PCoord extends React.Component {
   }
 
   componentDidUpdate () {
-    PCoord.draw(this.props.networks, this.state.seletedStats, this.state.svg);
-  }
-
-  static getMinMaxOfStats (networks, statNames) {
-    const statistics = networks.map(n => n.stat);
-    const statsByKey = Util.getArraiesByKey(statistics, statNames);
-    const ret = {};
-    for (let statName of statNames) {
-      const minmaxValue = Util.minmax(statsByKey[statName]);
-      ret[statName] = {
-        min: minmaxValue.min,
-        max: minmaxValue.max,
-      };
-    }
-    return ret;
+    PCoord.draw(this.props.networks, this.state.seletedStats, this.props.selected, this.state.svg);
   }
 
   // Parallel Coordinate를 그린다.
-  static draw (networks, statNames, svg) {
+  static draw (networks, statNames, selected, svg) {
     svg.selectAll("*").remove();
     const statsMinMax = PCoord.getMinMaxOfStats(networks, statNames);
 
@@ -138,12 +124,19 @@ class PCoord extends React.Component {
         });
       });
 
+      let color = CONSTANTS.COLOR_INSTANCE;
+      if (i == selected[0]) {
+        color = CONSTANTS.COLOR_SELECTED[0]
+      } else if (i == selected[1]) {
+        color = CONSTANTS.COLOR_SELECTED[1]
+      }
+
       // Draw Line
       svg.append("path")
         .attrs({
           d: lineFunction(lineData),
           fill: "none",
-          stroke: CONSTANTS.COLOR_INSTANCE,
+          stroke: color,
           "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
           opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
           id: `network_path-${i}`
@@ -153,8 +146,6 @@ class PCoord extends React.Component {
           PCoord.handleMouseOut(i);
         });
     });
-
-    return;
   }
 
   static handleMouseOver (idx, network, mouseX, mouseY) {
@@ -171,18 +162,30 @@ class PCoord extends React.Component {
 
   static highlightPath (selector) {
     d3.select(selector).attrs({
-      stroke: CONSTANTS.COLOR_HOVERED,
-      "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 3,
+      "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 5,
       opacity: CONSTANTS.OPACITY_SELECTED
     });
   }
 
   static dehighlightPath (selector) {
     d3.select(selector).attrs({
-      stroke: CONSTANTS.COLOR_INSTANCE,
       "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
       opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD
     });
+  }
+
+  static getMinMaxOfStats (networks, statNames) {
+    const statistics = networks.map(n => n.stat);
+    const statsByKey = Util.getArraiesByKey(statistics, statNames);
+    const ret = {};
+    for (let statName of statNames) {
+      const minmaxValue = Util.minmax(statsByKey[statName]);
+      ret[statName] = {
+        min: minmaxValue.min,
+        max: minmaxValue.max,
+      };
+    }
+    return ret;
   }
 
   render () {

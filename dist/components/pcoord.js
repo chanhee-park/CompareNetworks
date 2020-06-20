@@ -42,58 +42,19 @@ var PCoord = function (_React$Component) {
   }, {
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
-      PCoord.draw(this.props.networks, this.state.seletedStats, this.state.svg);
+      PCoord.draw(this.props.networks, this.state.seletedStats, this.props.selected, this.state.svg);
     }
+
+    // Parallel Coordinate를 그린다.
+
   }, {
     key: 'render',
     value: function render() {
       return React.createElement('svg', { id: this.state.svgId });
     }
   }], [{
-    key: 'getMinMaxOfStats',
-    value: function getMinMaxOfStats(networks, statNames) {
-      var statistics = networks.map(function (n) {
-        return n.stat;
-      });
-      var statsByKey = Util.getArraiesByKey(statistics, statNames);
-      var ret = {};
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = statNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var statName = _step.value;
-
-          var minmaxValue = Util.minmax(statsByKey[statName]);
-          ret[statName] = {
-            min: minmaxValue.min,
-            max: minmaxValue.max
-          };
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return ret;
-    }
-
-    // Parallel Coordinate를 그린다.
-
-  }, {
     key: 'draw',
-    value: function draw(networks, statNames, svg) {
+    value: function draw(networks, statNames, selected, svg) {
       svg.selectAll("*").remove();
       var statsMinMax = PCoord.getMinMaxOfStats(networks, statNames);
 
@@ -182,11 +143,18 @@ var PCoord = function (_React$Component) {
           });
         });
 
+        var color = CONSTANTS.COLOR_INSTANCE;
+        if (i == selected[0]) {
+          color = CONSTANTS.COLOR_SELECTED[0];
+        } else if (i == selected[1]) {
+          color = CONSTANTS.COLOR_SELECTED[1];
+        }
+
         // Draw Line
         svg.append("path").attrs({
           d: lineFunction(lineData),
           fill: "none",
-          stroke: CONSTANTS.COLOR_INSTANCE,
+          stroke: color,
           "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
           opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
           id: 'network_path-' + i
@@ -196,8 +164,6 @@ var PCoord = function (_React$Component) {
           PCoord.handleMouseOut(i);
         });
       });
-
-      return;
     }
   }, {
     key: 'handleMouseOver',
@@ -217,8 +183,7 @@ var PCoord = function (_React$Component) {
     key: 'highlightPath',
     value: function highlightPath(selector) {
       d3.select(selector).attrs({
-        stroke: CONSTANTS.COLOR_HOVERED,
-        "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 3,
+        "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD * 5,
         opacity: CONSTANTS.OPACITY_SELECTED
       });
     }
@@ -226,10 +191,48 @@ var PCoord = function (_React$Component) {
     key: 'dehighlightPath',
     value: function dehighlightPath(selector) {
       d3.select(selector).attrs({
-        stroke: CONSTANTS.COLOR_INSTANCE,
         "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
         opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD
       });
+    }
+  }, {
+    key: 'getMinMaxOfStats',
+    value: function getMinMaxOfStats(networks, statNames) {
+      var statistics = networks.map(function (n) {
+        return n.stat;
+      });
+      var statsByKey = Util.getArraiesByKey(statistics, statNames);
+      var ret = {};
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = statNames[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var statName = _step.value;
+
+          var minmaxValue = Util.minmax(statsByKey[statName]);
+          ret[statName] = {
+            min: minmaxValue.min,
+            max: minmaxValue.max
+          };
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return ret;
     }
   }]);
 

@@ -49,7 +49,8 @@ var App = function (_React$Component) {
             { className: "section section__pcoord", id: "svg_parent__pcoord" },
             React.createElement(PCoord, { networks: this.props.networks, selected: this.state.selected })
           ),
-          React.createElement(Tooltip, null)
+          React.createElement(Tooltip, null),
+          React.createElement(SelectionPopUp, null)
         ),
         React.createElement(
           "div",

@@ -25,6 +25,7 @@ class App extends React.Component {
             < PCoord networks={this.props.networks} selected={this.state.selected} />
           </div>
           <Tooltip />
+          <SelectionPopUp />
         </div>
 
         <div className="row row--second">
