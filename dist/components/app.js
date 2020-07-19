@@ -64,30 +64,38 @@ var App = function (_React$Component) {
             { className: "container container__diagram container__diagram--small" },
             React.createElement(
               "div",
-              { className: "section section__diagram section__diagram--small" },
+              { className: "section section__diagram section__diagram--small", id: "diagram-1" },
               React.createElement(Diagram, { network: this.props.networks[this.state.selected[0]], idx: "1", type: "matrix" })
             ),
-            React.createElement("div", { className: "section section__diagram section__diagram--small" })
+            React.createElement("div", { className: "section section__diagram section__diagram--small", id: "diagram-2" })
           ),
           React.createElement(
             "div",
             { className: "container container__diagram container__diagram--large" },
-            React.createElement("div", { className: "section section__diagram section__diagram--large" })
+            React.createElement(
+              "div",
+              { className: "section section__diagram section__diagram--large", id: "diagram-3" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[0]], idx: "3", type: "node-link" })
+            )
           ),
           React.createElement(
             "div",
             { className: "container container__diagram container__diagram--large" },
-            React.createElement("div", { className: "section section__diagram section__diagram--large" })
+            React.createElement(
+              "div",
+              { className: "section section__diagram section__diagram--large", id: "diagram-4" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[1]], idx: "4", type: "node-link" })
+            )
           ),
           React.createElement(
             "div",
             { className: "container container__diagram container__diagram--small" },
             React.createElement(
               "div",
-              { className: "section section__diagram section__diagram--small" },
-              React.createElement(Diagram, { network: this.props.networks[this.state.selected[1]], idx: "4", type: "matrix" })
+              { className: "section section__diagram section__diagram--small", id: "diagram-5" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[1]], idx: "5", type: "matrix" })
             ),
-            React.createElement("div", { className: "section section__diagram section__diagram--small" })
+            React.createElement("div", { className: "section section__diagram section__diagram--small", id: "diagram-6" })
           )
         )
       );

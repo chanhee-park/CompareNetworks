@@ -1,19 +1,19 @@
-var _slicedToArray = function () { function sliceIterator (arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _createClass = function () { function defineProperties (target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _toConsumableArray (arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-function _classCallCheck (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn (self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits (subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Tooltip = function (_React$Component) {
   _inherits(Tooltip, _React$Component);
 
-  function Tooltip (props) {
+  function Tooltip(props) {
     _classCallCheck(this, Tooltip);
 
     return _possibleConstructorReturn(this, (Tooltip.__proto__ || Object.getPrototypeOf(Tooltip)).call(this, props));
@@ -23,7 +23,7 @@ var Tooltip = function (_React$Component) {
 
   _createClass(Tooltip, [{
     key: "render",
-    value: function render () {
+    value: function render() {
       return React.createElement(
         "div",
         { id: "tooltip", className: "hidden" },
@@ -37,34 +37,34 @@ var Tooltip = function (_React$Component) {
     }
   }], [{
     key: "show",
-    value: function show (x, y, network) {
+    value: function show(x, y, network) {
       d3.select("#tooltip").style("left", x + 20 + "px").style("top", y + 10 + "px").classed("hidden", false).select("#description").html(Tooltip.getTooltipTxt(network));
       Tooltip.drawDegreeHistogram(network.stat.degrees);
     }
   }, {
     key: "hidden",
-    value: function hidden () {
+    value: function hidden() {
       d3.select("#tooltip").classed("hidden", true);
     }
   }, {
     key: "getTooltipTxt",
-    value: function getTooltipTxt (network) {
+    value: function getTooltipTxt(network) {
       return "\n    <div class=\"key-val-set\">\n      <div class=\"key\">Number of Nodes:</div>\n      <div class=\"val\">" + network.stat.N + "</div>\n    </div>\n    <div class=\"key-val-set\">\n      <div class=\"key\">Number of Edges:</div>\n      <div class=\"val\">" + network.stat.E + "</div>\n    </div>\n    <div class=\"key-val-set\">\n      <div class=\"key\">Density(Edeg-Node Ratio):</div>\n      <div class=\"val\">" + Number(network.stat.D.toFixed(4)) + "</div>\n    </div>\n    <div class=\"key-val-set\">\n      <div class=\"key\">Degree Histogram</div>\n      <div class=\"val\"><svg id=\"degreesHistogram\"></svg></div>\n    </div>\n    ";
     }
   }, {
     key: "drawDegreeHistogram",
-    value: function drawDegreeHistogram (degrees) {
+    value: function drawDegreeHistogram(degrees) {
       // svg size
       var SVG_W = 450,
-        SVG_H = 200;
+          SVG_H = 200;
       // padding size
       var PADDING_L = 20,
-        PADDING_R = 10,
-        PADDING_B = 30,
-        PADDING_T = 30;
+          PADDING_R = 10,
+          PADDING_B = 30,
+          PADDING_T = 30;
       // render zone size
       var RENDER_W = SVG_W - PADDING_L - PADDING_R,
-        RENDER_H = SVG_H - PADDING_B - PADDING_T;
+          RENDER_H = SVG_H - PADDING_B - PADDING_T;
 
       var svg = d3.select("#degreesHistogram").style("width", SVG_W).style("height", SVG_H);
 

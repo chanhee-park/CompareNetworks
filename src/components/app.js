@@ -35,31 +35,31 @@ class App extends React.Component {
 
         <div className="row row--second">
           <div className="container container__diagram container__diagram--small">
-            <div className="section section__diagram section__diagram--small">
+            <div className="section section__diagram section__diagram--small" id="diagram-1">
               < Diagram network={this.props.networks[this.state.selected[0]]} idx='1' type='matrix' />
             </div>
-            <div className="section section__diagram section__diagram--small">
+            <div className="section section__diagram section__diagram--small" id="diagram-2">
               {/* TODO: < Diagram network={this.props.selectedNetworks[1]} /> */}
             </div>
           </div>
 
           <div className="container container__diagram container__diagram--large">
-            <div className="section section__diagram section__diagram--large">
-              {/* TODO: < Diagram network={this.props.selectedNetworks[2]} /> */}
+            <div className="section section__diagram section__diagram--large" id="diagram-3">
+              < Diagram network={this.props.networks[this.state.selected[0]]} idx='3' type='node-link' />
             </div>
           </div>
 
           <div className="container container__diagram container__diagram--large">
-            <div className="section section__diagram section__diagram--large">
-              {/* TODO: < Diagram network={this.props.selectedNetworks[3]} /> */}
+            <div className="section section__diagram section__diagram--large" id="diagram-4">
+              < Diagram network={this.props.networks[this.state.selected[1]]} idx='4' type='node-link' />
             </div>
           </div>
 
           <div className="container container__diagram container__diagram--small">
-            <div className="section section__diagram section__diagram--small">
-              < Diagram network={this.props.networks[this.state.selected[1]]} idx='4' type='matrix' />
+            <div className="section section__diagram section__diagram--small" id="diagram-5">
+              < Diagram network={this.props.networks[this.state.selected[1]]} idx='5' type='matrix' />
             </div>
-            <div className="section section__diagram section__diagram--small">
+            <div className="section section__diagram section__diagram--small" id="diagram-6">
               {/* TODO: < Diagram network={this.props.selectedNetworks[5]} /> */}
             </div>
           </div>

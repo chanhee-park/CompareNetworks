@@ -32,7 +32,10 @@ var Diagram = function (_React$Component) {
             network: this.props.network
           });
         case 'node-link':
-          // TODO: return <NodeLinkDiagram/>;
+          return React.createElement(NodeLinkDiagram, {
+            svgId: this.state.svgId,
+            color: this.state.color,
+            network: this.props.network });
           break;
         case 'dashboard':
           // TODO return <DashboardDiagram/>;
