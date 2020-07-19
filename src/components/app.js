@@ -3,7 +3,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       clicked: 0,
-      selected: [0, 1],
+      selected: [59, 75],
     }
   }
 
@@ -39,7 +39,7 @@ class App extends React.Component {
               < Diagram network={this.props.networks[this.state.selected[0]]} idx='1' type='matrix' />
             </div>
             <div className="section section__diagram section__diagram--small" id="diagram-2">
-              {/* TODO: < Diagram network={this.props.selectedNetworks[1]} /> */}
+              < Diagram network={this.props.networks[this.state.selected[0]]} idx='2' type='radial' />
             </div>
           </div>
 
@@ -60,7 +60,7 @@ class App extends React.Component {
               < Diagram network={this.props.networks[this.state.selected[1]]} idx='5' type='matrix' />
             </div>
             <div className="section section__diagram section__diagram--small" id="diagram-6">
-              {/* TODO: < Diagram network={this.props.selectedNetworks[5]} /> */}
+              < Diagram network={this.props.networks[this.state.selected[1]]} idx='6' type='radial' />
             </div>
           </div>
         </div>

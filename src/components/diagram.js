@@ -15,14 +15,19 @@ class Diagram extends React.Component {
           color={this.state.color}
           network={this.props.network}
         />;
+        break;
       case 'node-link':
         return <NodeLinkDiagram
           svgId={this.state.svgId}
           color={this.state.color}
           network={this.props.network} />;
         break;
-      case 'dashboard':
-        // TODO return <DashboardDiagram/>;
+      case 'radial':
+        return <RadialDiagram
+          svgId={this.state.svgId}
+          color={this.state.color}
+          network={this.props.network}
+        />;
         break;
     }
     return <div />

@@ -196,7 +196,7 @@ class Util {
    * @param {string} color '#1579AD'
    * @param {*} percent 0 ~ 1
    */
-  static lightenColor (color, percent = 0.5) {
+  static lightenColor (color, percent = 0.3) {
     const num = parseInt(color.replace('#', ''), 16),
       amt = Math.round(255 * percent),
       R = (num >> 16) + amt,

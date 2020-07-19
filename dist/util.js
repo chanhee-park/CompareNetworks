@@ -302,7 +302,7 @@ var Util = function () {
   }, {
     key: "lightenColor",
     value: function lightenColor(color) {
-      var percent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.5;
+      var percent = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0.3;
 
       var num = parseInt(color.replace('#', ''), 16),
           amt = Math.round(255 * percent),

@@ -1,13 +1,10 @@
 class NodeLinkDiagram extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      padding: 5,
-    }
+    this.state = {}
   }
 
   componentDidMount () {
-    // set SVG size
     const containerId = Util.getParentIdOfReactComp(this);
     const container = document.getElementById(containerId);
 
@@ -19,13 +16,13 @@ class NodeLinkDiagram extends React.Component {
     // option: https://visjs.github.io/vis-network/docs/network/#options
     const options = {
       autoResize: false,
-      height: '100%',
+      height: '95%',
       width: '100%',
       // https://visjs.github.io/vis-network/docs/network/edges.html
       edges: {
         color: {
           color: Util.lightenColor(this.props.color),
-          opacity: 0.5,
+          opacity: 0.25,
         },
         width: 0.1
       },
@@ -66,7 +63,7 @@ class NodeLinkDiagram extends React.Component {
     visNetwork.on("stabilizationIterationsDone", function () {
       visNetwork.setOptions({ physics: false });
     });
-    // console.log(visNetwork);
+    console.log(visNetwork);
   }
 
   generateVisNetwork () {

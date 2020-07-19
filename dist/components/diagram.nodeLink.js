@@ -16,16 +16,13 @@ var NodeLinkDiagram = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (NodeLinkDiagram.__proto__ || Object.getPrototypeOf(NodeLinkDiagram)).call(this, props));
 
-    _this.state = {
-      padding: 5
-    };
+    _this.state = {};
     return _this;
   }
 
   _createClass(NodeLinkDiagram, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      // set SVG size
       var containerId = Util.getParentIdOfReactComp(this);
       var container = document.getElementById(containerId);
 
@@ -37,13 +34,13 @@ var NodeLinkDiagram = function (_React$Component) {
       // option: https://visjs.github.io/vis-network/docs/network/#options
       var options = {
         autoResize: false,
-        height: '100%',
+        height: '95%',
         width: '100%',
         // https://visjs.github.io/vis-network/docs/network/edges.html
         edges: {
           color: {
             color: Util.lightenColor(this.props.color),
-            opacity: 0.5
+            opacity: 0.25
           },
           width: 0.1
         },
@@ -86,7 +83,7 @@ var NodeLinkDiagram = function (_React$Component) {
       visNetwork.on("stabilizationIterationsDone", function () {
         visNetwork.setOptions({ physics: false });
       });
-      // console.log(visNetwork);
+      console.log(visNetwork);
     }
   }, {
     key: 'generateVisNetwork',

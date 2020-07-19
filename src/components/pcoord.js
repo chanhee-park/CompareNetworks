@@ -124,20 +124,26 @@ class PCoord extends React.Component {
         });
       });
 
-      let color = CONSTANTS.COLOR_INSTANCE;
+      let st_color = CONSTANTS.COLOR_INSTANCE;
+      let st_width = CONSTANTS.STROKE_WIDTH_PCOORD;
+      let st_opacity = CONSTANTS.OPACITY_INSTANCE_PCOORD;
       if (i == selected[0]) {
-        color = CONSTANTS.COLOR_SELECTED[0]
+        st_color = CONSTANTS.COLOR_SELECTED[0];
+        st_width *= 2;
+        st_opacity = 1;
       } else if (i == selected[1]) {
-        color = CONSTANTS.COLOR_SELECTED[1]
+        st_color = CONSTANTS.COLOR_SELECTED[1]
+        st_width *= 2;
+        st_opacity = 1;
       }
 
       // Draw Line
       svg.append("path").attrs({
         d: lineFunction(lineData),
         fill: "none",
-        stroke: color,
-        "stroke-width": CONSTANTS.STROKE_WIDTH_PCOORD,
-        opacity: CONSTANTS.OPACITY_INSTANCE_PCOORD,
+        stroke: st_color,
+        "stroke-width": st_width,
+        opacity: st_opacity,
         id: `network_path-${i}`
       }).on("mouseover", () => this.handleMouseOver(i, n, d3.event.pageX, d3.event.pageY))
         .on("mouseout", () => this.handleMouseOut(i))
@@ -146,6 +152,7 @@ class PCoord extends React.Component {
   }
 
   handleMouseOver = (idx, network, mouseX, mouseY) => {
+
     ScatterPlot.highlightCircle(`#network_circle-${idx}`);
     PCoord.highlightPath(`#network_path-${idx}`);
     Tooltip.show(mouseX, mouseY, network);

@@ -26,7 +26,7 @@ var App = function (_React$Component) {
 
     _this.state = {
       clicked: 0,
-      selected: [0, 1]
+      selected: [59, 75]
     };
     return _this;
   }
@@ -67,7 +67,11 @@ var App = function (_React$Component) {
               { className: "section section__diagram section__diagram--small", id: "diagram-1" },
               React.createElement(Diagram, { network: this.props.networks[this.state.selected[0]], idx: "1", type: "matrix" })
             ),
-            React.createElement("div", { className: "section section__diagram section__diagram--small", id: "diagram-2" })
+            React.createElement(
+              "div",
+              { className: "section section__diagram section__diagram--small", id: "diagram-2" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[0]], idx: "2", type: "radial" })
+            )
           ),
           React.createElement(
             "div",
@@ -95,7 +99,11 @@ var App = function (_React$Component) {
               { className: "section section__diagram section__diagram--small", id: "diagram-5" },
               React.createElement(Diagram, { network: this.props.networks[this.state.selected[1]], idx: "5", type: "matrix" })
             ),
-            React.createElement("div", { className: "section section__diagram section__diagram--small", id: "diagram-6" })
+            React.createElement(
+              "div",
+              { className: "section section__diagram section__diagram--small", id: "diagram-6" },
+              React.createElement(Diagram, { network: this.props.networks[this.state.selected[1]], idx: "6", type: "radial" })
+            )
           )
         )
       );

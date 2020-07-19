@@ -31,14 +31,19 @@ var Diagram = function (_React$Component) {
             color: this.state.color,
             network: this.props.network
           });
+          break;
         case 'node-link':
           return React.createElement(NodeLinkDiagram, {
             svgId: this.state.svgId,
             color: this.state.color,
             network: this.props.network });
           break;
-        case 'dashboard':
-          // TODO return <DashboardDiagram/>;
+        case 'radial':
+          return React.createElement(RadialDiagram, {
+            svgId: this.state.svgId,
+            color: this.state.color,
+            network: this.props.network
+          });
           break;
       }
       return React.createElement('div', null);
